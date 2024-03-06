@@ -21,11 +21,12 @@ const userSchema = mongoose.Schema({
             type:String,
             required:true,
       },
-      is_admin:{
-            type:Number,
-            default:0,
+      is_blocked:{
+            type:Boolean,
+            default:false,
       }
-});
+     
+},{versionKey : false});
 
 const User = mongoose.model("User",userSchema);
 module.exports = User;

@@ -1,8 +1,9 @@
-
+const User = require('../model/userModel');
 const adminEmail = process.env.adminEmail;
 const adminPassword = process.env.adminPassword;
 
 
+//////////admin login///////////////////////////////////////////////
 
 const adminLogin = async (req,res)=>{
       try {
@@ -40,8 +41,62 @@ const adminDashboard = async (req,res)=>{
       }
 }
 
+//////adminproduct////////////////
+const adminproduct = async (req,res)=>{
+      try {
+            console.log("hrllijv");
+            res.render('admin/adminproduct');
+            
+      } catch (error) {
+            console.log(error);
+            
+      }
+}
 
+////////////loading admin user list//////////
 
+const adminUser= async (req,res)=>{
+      try {
+            const userData = await User.find({})
+            res.render('admin/adminUser',{userData});
+            
+      } catch (error) {
+            console.log(error);
+            
+      }
+}
+////////////////////
+
+const blockuser = async (req,res)=>{
+      try {
+           const id = req.query.id;
+           const findUser = await User.findById({_id :id});
+
+           if(findUser.is_blocked == false){
+            const userData = await User.updateOne({_id:id},{is_blocked : true})
+           }
+            res.redirect('/admin/adminUser')
+      } catch (error) {
+            console.log("There was an error in blocking user",error);
+            
+      }
+}
+
+const unblockUser = async (req,res)=>{
+      try {
+            const id = req.query.id;
+            const findUser = await User.findById({_id:id});
+            
+           if(findUser.is_blocked == true){
+            const userData = await User.updateOne({_id:id},{is_blocked : false})
+           } 
+           res.redirect('/admin/adminUser')
+            
+      } catch (error) {
+            console.log(error);
+            
+      }
+}
 
 
 
@@ -52,4 +107,8 @@ module.exports ={
       adminLogin,
       verifyAdmin,
       adminDashboard,
+      adminproduct,
+      adminUser,
+      blockuser,
+      unblockUser,
 }
