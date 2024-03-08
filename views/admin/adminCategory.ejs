@@ -203,10 +203,11 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="" method="post">
+                            <form action="" method="post" id="submit">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="catname" />
+                                    <input type="text" onblur="name()" placeholder="Type here" class="form-control" id="product_name" name="catname" />
+                                    <p class="text-danger" id="nameerror"></p>
                                 </div>
                                 <!-- <div class="mb-4">
                                     <label for="product_slug" class="form-label">Slug</label>
@@ -221,7 +222,9 @@
                                 </div> -->
                                 <div class="mb-4">
                                     <label class="form-label">Description</label>
-                                    <textarea placeholder="Type here" class="form-control" name="catdescription"></textarea>
+                                    <textarea placeholder="Type here" onblur="description()" class="form-control" id="category_name" name="catdescription"></textarea>
+                                    <p class="text-danger" id="deserror"></p>
+                                    <p id="formerror" class="text-danger"></p>
                                 </div>
                                 <div class="d-grid">
                                     <button class="btn btn-primary">Create category</button>
@@ -238,7 +241,7 @@
                                             <th>Description</th>
                                             <th>List/Unlist</th>
                                             <th>Edit</th>
-                                            <th>Delete</th>
+                                            <th class="text-end">Delete</th>
                                             <!-- <th class="text-end">Action</th> -->
                                         </tr>
                                     </thead>
@@ -459,7 +462,85 @@
                 </div>
             </div>
         </footer> -->
+
+      
+
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+      function name(){
+            const name = document.getElementById("product_name").value 
+            const nameRegex = /^[a-zA-Z]{3,}(?:['., -][a-zA-Z ]*)*$/;
+         
+
+            if (name === "") {
+                  document.getElementById("nameerror").innerHTML = "Name is required";
+              } else if (name.length < 3) {
+                  document.getElementById("nameerror").innerHTML = "Name should contain at least 3 letters";
+              } else if (!nameRegex.test(name)) {
+                  document.getElementById("nameerror").innerHTML = "Name should be alphabets";
+              } else {
+                  document.getElementById("nameerror").innerHTML = "";
+              }
+            
+      }
+
+      function description(){
+            const description = document.getElementById("category_name").value
+
+            if(description==""){
+                  document.getElementById("deserror").innerHTML="Description is required"
+            }else{
+                  document.getElementById("deserror").innerHTML=""
+            }
+      }
+      document.getElementById("submit").addEventListener("submit",(e)=>{
+            name();
+            description();
+            const nameerror = document.getElementById("nameerror").innerHTML
+            const deserror = document.getElementById("deserror").innerHTML
+            if(nameerror||deserror){
+                  
+                  e.preventDefault()
+            }
+      })
+      function list(id){
+            
+            const description = document.getElementById("category_name").value
+        
+
+            
+            Swal.fire({
+                  title: "Are you sure?",
+                  text: "You won't be able to revert this!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                 
+                  
+                        $.ajax({
+                              url:"/admin/block-unblock",
+                              method:"POST",
+                              data:{
+                                    id:id
+                              },
+                              success:function(response){
+                                    if(response.status===true){
+                                          window.location.href="/admin/adminCategory"
+                                    }
+
+                              },
+                              
+                        })
+                  
+                  
+                });
+      }
+    </script>
     <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin-assets/js/vendors/select2.min.js"></script>

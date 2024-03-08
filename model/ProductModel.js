@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
             require : true
       },
       image : {
-            type : array,
+            type : Array,
             require : true
       },
       category : {

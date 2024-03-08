@@ -2,6 +2,9 @@ const express = require('express');
 const router = express();
 const adminController  = require("../controller/adminController");
 const categoryController = require("../controller/CategoryController");
+const productController = require("../controller/productController");
+const upload = require('../multer/multer');
+
 
 
 router.get('/',adminController.adminLogin)
@@ -16,7 +19,17 @@ router.get('/unblock-user',adminController.unblockUser);
 router.get('/adminCategory',categoryController.adminCategory);
 router.post('/adminCategory',categoryController.addCategory);
 router.get('/cat-edit',categoryController.loadEdit);
-router.post('/editCategoryPost',categoryController.editcat);
+router.post('/editCategoryPost',categoryController.editcat)
+router.post('/block-unblock',categoryController.blockunblock);
+
+/////////////Product////////////////////////////////////
+
+router.get('/addProduct',productController.loadAddpro);
+router.post('/addProduct',upload.array('image'),productController.addProduct);
+router.get('/productUnblock',productController.productUnblock)
+router.get('/productBlock',productController.productBlock);
+router.get('/editProduct',productController.editProduct);
+
 
 
 module.exports=router

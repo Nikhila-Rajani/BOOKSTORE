@@ -1,7 +1,7 @@
 const User = require('../model/userModel');
 const adminEmail = process.env.adminEmail;
 const adminPassword = process.env.adminPassword;
-
+const product = require('../model/ProductModel')
 
 //////////admin login///////////////////////////////////////////////
 
@@ -44,8 +44,8 @@ const adminDashboard = async (req,res)=>{
 //////adminproduct////////////////
 const adminproduct = async (req,res)=>{
       try {
-            console.log("hrllijv");
-            res.render('admin/adminproduct');
+            const Product = await product.find({})
+            res.render('admin/adminproduct',{Product});
             
       } catch (error) {
             console.log(error);

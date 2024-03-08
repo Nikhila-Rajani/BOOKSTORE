@@ -2,6 +2,7 @@ const User = require('../model/userModel');
 const nodemailer = require('nodemailer');
 const generateOTP = require('../controller/otpGenerate');
 const bcrypt = require('bcrypt');
+const Product = require('../model/ProductModel')
 
 const Email = process.env.Email;
 const Password = process.env.Password;
@@ -40,7 +41,8 @@ const userLogin = async(req,res)=>{
 
 const userHome = async(req,res)=>{
       try {
-            res.render("user/home")
+            const ProductData =await Product.find({is_blocked:false})
+            res.render("user/home",{ProductData})
             
       } catch (error) {
             console.log(error);

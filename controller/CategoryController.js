@@ -98,13 +98,38 @@ const editcat = async (req, res) => {
       }
 }
 
+const blockunblock = async(req,res)=>{
+      try {
+            console.log("hello");
+            const catid = req.body.id;
+            const categoryData = await Category.findById(catid);
+         if(categoryData.is_blocked === false){
+            categoryData.is_blocked = true;
+
+
+         }else if(categoryData.is_blocked === true){
+            categoryData.is_blocked = false;
+
+            
+         }
+         await categoryData.save();
+         res.json({status:true})
+            
+      } catch (error) {
+            console.log(error);
+            
+      }
+}
+
 
 
 module.exports = {
       adminCategory,
       addCategory,
       loadEdit,
-      editcat
+      editcat,
+      blockunblock,
+
 
 }
 
