@@ -221,8 +221,8 @@
                                         <th class="text-center">Name</th>
                                         <th class="text-center">Regular price</th>
                                         <th class="text-center">Offer Price</th>
-                                        <th class="text-center">Action</th>
                                         <th class="text-center">Stock</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -245,27 +245,27 @@
                                             </td>
                                             
 
-                                            <td class="align-middle text-center">
-                                            <% if (element.is_blocked === true) { %>
-                                                <a href="/admin/productUnblock?_id=<%= element._id %>" class="btn btn-sm font-sm btn-light rounded unlist-btn" style="background-color: green;">
-                                                   unblock
-                                                </a>
-                                            <% } else { %>
-                                                <a href="/admin/productBlock?_id=<%= element._id %>" class="btn btn-sm font-sm btn-light rounded unlist-btn" style="background-color: red;">
-                                                   Block
-                                                </a>
-                                               
-                                           <%  } %>
-                                                   
-                                            
-                                                    <a href="/admin/editProduct?_id=<%= element._id %>" class="btn btn-sm font-sm rounded btn-brand">
-                                                        <i class="material-icons md-edit"></i> Edit
-                                                    </a>
-                                                    
-                                                
-                                            </td>
+                                           
                                             <td class="align-middle text-center"> <%= element.stock %> </td>
-                                             
+                                            <td class="align-middle text-center">
+                                                <% if (element.is_blocked === true) { %>
+                                                    <a href="/admin/productUnblock?_id=<%= element._id %>" class="btn btn-sm font-sm btn-light rounded unlist-btn" style="background-color: green;">
+                                                       unblock
+                                                    </a>
+                                                <% } else { %>
+                                                    <a href="/admin/productBlock?_id=<%= element._id %>" class="btn btn-sm font-sm btn-light rounded unlist-btn" style="background-color: red;">
+                                                       Block
+                                                    </a>
+                                                   
+                                               <%  } %>
+                                                       
+                                                
+                                                        <a href="/admin/editProduct?_id=<%= element._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                                                            <i class="material-icons md-edit"></i> Edit
+                                                        </a>
+                                                        
+                                                    
+                                                </td>
                                            
                                         </tr>
                                         <% }) %>

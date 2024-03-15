@@ -4,6 +4,7 @@ const adminController  = require("../controller/adminController");
 const categoryController = require("../controller/CategoryController");
 const productController = require("../controller/productController");
 const upload = require('../multer/multer');
+const middleware = require('../middleware/adminAuth')
 
 
 
@@ -29,6 +30,9 @@ router.post('/addProduct',upload.array('image'),productController.addProduct);
 router.get('/productUnblock',productController.productUnblock)
 router.get('/productBlock',productController.productBlock);
 router.get('/editProduct',productController.editProduct);
+router.post('/editProduct',upload.array('image'),productController.editPro)
+router.post('/deleteimage',productController.deleteImage)
+
 
 
 

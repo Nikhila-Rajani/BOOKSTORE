@@ -18,6 +18,9 @@ const transport = nodemailer.createTransport({
       }
 })
 
+
+ 
+
 //////////////////////////////Password hashing///////////////////////////////////////////////
 
 const passwordHashing = async (password)=> {
@@ -42,7 +45,8 @@ const userLogin = async(req,res)=>{
 const userHome = async(req,res)=>{
       try {
             const ProductData =await Product.find({is_blocked:false})
-            res.render("user/home",{ProductData})
+           const email = req.session.email
+            res.render("user/home",{ProductData,email})
             
       } catch (error) {
             console.log(error);
@@ -60,40 +64,14 @@ const userRegister = async(req,res)=>{
 
 const getUser = async(req,res)=>{
       try {
-           
-            let {username,email,mobile,password,conpassword} = req.body
-            username = username.trim();
-            email = email.trim();
-            mobile = mobile.trim();
-            password = password.trim();
-            conpassword = conpassword.trim();
+         
+            const {username,email,mobile,password,conpassword} = req.body
+          
 
             const otp = generateOTP();
-            console.log(otp);
+            console.log("otp is :",otp);
 
-           ///////////////////////////////validation///////////////////////////////////
-
-           //checking if fields are empty 
-           if(username===""||email===""||mobile===""||password===""||conpassword===""){
-            res.render("user/register",{message:"Fields are empty"})
-           }else if(password!==conpassword){
-            res.render("user/register",{message:"Both passwords do not match"});
-           }else if(!/^(?!0{10})[1-9][0-9]{9}$/.test(mobile)){
-            res.render("user/register",{message:"Number is invlid!.."})
-           }else if (!/^[A-Z][a-zA-Z]*([ ][A-Z][a-zA-Z]*)?$/.test(username)){
-            res.render("user/register",{message:"Name is invalid!.."})
-           }else if(password.length<8){
-            res.render("user/register",{message:"Password should contain minimum 8 characters.. "})
-           }else if(!/^(?!.*\s)[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){
-            res.render("user/register",{message:"Enter a valid email!"})
-           }else{
-            const existsEmail  = await User.findOne({email:email});
-            const existMobile  = await User.findOne({mobile:mobile});
-            if(existsEmail){
-                  res.render("user/register",{message:"email already ullathaa molusaaa"})
-            }else if(existMobile){
-                  res.render("user/register",{message:"Mobile number already exists"})
-            }else{
+        
                   const newUser = {
                         username,
                         email,
@@ -103,10 +81,13 @@ const getUser = async(req,res)=>{
                         otp
 
                   }
+                  
                   req.session.Data =  req.session.Data || {};
+                
+                  
                   Object.assign(req.session.Data,newUser)
                   req.session.save();
-                 //// //sending otp through mail
+               
                   const mailoptions = {
                         from:Email,
                         to:email,
@@ -123,8 +104,8 @@ const getUser = async(req,res)=>{
 
                 console.log("User added successfully");
                 res.redirect("/otp")
-            }
-           }
+            
+           
            
       } catch (error) {
             console.log(error);
@@ -146,6 +127,8 @@ const verifyotp = async(req,res)=>{
       try {
             console.log(req.body);
             if(req.session.Data.otp==req.body.otp){
+                  console.log('stored otp :',req.session.Data.otp)
+                  console.log('from body',req.body.otp);
                   const securePass = await passwordHashing(req.session.Data.password)
                   const newUser = new User({
                         username:req.session.Data.username,
@@ -172,10 +155,11 @@ const verifyLogin = async(req,res)=>{
             if(findUser){
                   const passwordMatch = await bcrypt.compare(password,findUser.password)
                   if(passwordMatch){
-                        res.render('user/home');
+                        req.session.email =  email
+                        res.redirect('/');
                   }else{
                         res.render('user/login',{passErr:"Incorrect password try again"});
-                  }
+                  } 
             }else{
                  
                   res.render('user/login',{emailErr:"Incorrect email  please try again "});
@@ -186,8 +170,36 @@ const verifyLogin = async(req,res)=>{
             
       }
 }
+/////load detailed product////
+const detailedProduct = async (req,res) =>{
+      try {
+            const id = req.query.id
+            console.log(id);
+             const proData = await Product.findById({_id : id})
+             console.log(proData);
+            res.render("user/detailedProduct",{proData});
+            
+      } catch (error) {
+            console.log(error);
+            
+      }
+ }
 
 
+
+ const logoutUser = async(req,res)=>{
+      try{
+            if(req.session.email){
+                  delete req.session.email 
+                  res.redirect('/login')
+            }else{
+
+            }
+
+      }catch(err){
+            console.log(err.message);
+      }
+ }
 
 
 
@@ -200,7 +212,9 @@ module.exports = {
       getUser,
       getOtp,
       verifyotp,
-      verifyLogin
+      verifyLogin,
+      detailedProduct,
+      logoutUser
 }
 
 

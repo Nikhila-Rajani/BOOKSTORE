@@ -201,19 +201,19 @@
                                 <h4>Basic</h4>
                             </div>
                             <div class="card-body ">
-                                <form method="post" action="" enctype="multipart/form-data">
+                              <form method="post"  enctype="multipart/form-data" id="pdtform">
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Product title</label>
                                         <input type="text" placeholder="Type here" class="form-control" id="product_name"
-                                        name="product_name" value="<%= productDetails.name %>" onblur="nameFun()">
-                                        <p id="nameErr" class="text-danger"></p>
-
+                                        name="pname" value="<%= productDetails.name %>" onblur="nameFun()">
+                                        <p id="nameErr" class="text-danger" ></p>
+                                       
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Full description</label>
                                         <textarea placeholder="Type here" class="form-control" rows="4" id="product_des"
-                                        name="product_des" onblur="desFun"><%= productDetails.discription %></textarea>
-                                        <p id="desErr" class="text-danger"></p>
+                                        name="product_des"  onblur="desFun()"><%= productDetails.discription %></textarea >
+                                        <p id="desErr" class="text-danger" ></p>
                                         
                                     </div>
                                     <div class="row">
@@ -222,7 +222,7 @@
                                                 <label class="form-label">Regular Price</label>
                                                 <div class="row gx-2">
                                                     <input placeholder="$" type="number" class="form-control" id="regprice"
-                                                     name="regprice" value="<%= productDetails.regularPrice %>" onblur="regFun" value="">
+                                                     name="regprice" onblur="regFun() " value="<%= productDetails.regularPrice %>" >
                                                      <p id="regErr" class="text-danger"></p>
                                                 </div>
                                             </div>
@@ -231,25 +231,24 @@
                                             <div class="mb-4">
                                                 <label class="form-label">Offer Price</label>
                                                 <input placeholder="$" type="number" class="form-control" id="offprice"
-                                                name="offprice" value="<%= productDetails.offerPrice %>" onblur="offFun">
-                                                <p name="offErr" class="text-danger"></p>
+                                                name="offprice" onblur=" offFun()" value="<%= productDetails.offerPrice %>">
+                                                <p id="offErr" class="text-danger"></p>
                                             </div>
                                         </div>
                                        
                                         <div class="col-lg-4">
                                             <label class="form-label" name="catName">Category</label>
-                                            <select class="form-select"name="catName">
+                                          
+                                            <select class="form-select" name="catName">
                                                 
-                                                <% categoryData.forEach(element => { %>
-                                                 <% if (element.name!=productDetails.category) { %>
-                                                  
-                                               
-                                            
-                                                <option><%= element.name %></option>
-                                                <% } %>
                                               
-                                              <% }) %>
-                                              
+                                                    
+                                                <% category.forEach(element =>{%>
+                                                
+                                                    
+                                                    <option <%= element.name === productDetails.category.name ? 'selected': '' %>> <%= element.name %></option>
+                                                     <%})%>
+                                                   
                                             </select>
                                         </div>
                                     </div>
@@ -270,15 +269,19 @@
                                                 <% for( let i = 0 ; i < productDetails.image.length; i++ ) { %>
                                                       
                                                       <img src="/uploads/<%= productDetails.image[i] %>" alt="heloo">
-                                          
+
+
+                                                      <button class="btn btn-sm font-sm rounded btn-brand" id="deletimage" style="background-color: #3F2520; margin-bottom: 60px;"
+                                                onclick="deleteImage('<%= productDetails._id %>' ,'<%= i %>')">Delete</button>
+                                                      <% } %> 
                                                 <label for="Pro_img" class="form-label">Upload Images</label>
-                                                <input class="form-control" name="image" type="file" id="Pro_img" multiple
-                                                    onchange="previewImages()">
+                                                <input class="form-control" onchange="previewImages()" name="image" type="file" id="Pro_img" multiple
+                                                    >
                                                     
                                                 <div id="imagePreviewContainer" class="image-preview-container"></div>
                                                 <p class="text-danger text-center mb-15 mt-15" id="imageError"></p>
                                             </div>
-                                             <% } %> 
+                                           
                                     </div>
                                 </div> <!-- card end// -->
                             </div>
@@ -293,8 +296,8 @@
                                             <div class="mb-4">
                                                 <label for="product_name" class="form-label">Stock</label>
                                                 <input type="number" class="form-control" id="stock"
-                                                name="stock" value="<%= productDetails.stock %>" onblur="stockFun">
-                                                <p name="stockErr" class="text-danger"></p>
+                                                name="stock" onblur=" stockFun()" value="<%= productDetails.stock %>" >
+                                                <p  id="stockErr" class="text-danger"></p>
                                             </div>
                                         </div> <!-- row.// -->
                                     </div>
@@ -304,9 +307,9 @@
                     </div>
                 </div>
             </div>
-            <div style="padding-left:190px;">
-                  <button class="btn btn-light rounded font-sm mr-5 text-body hover-up" id="submit"  onclick="validateform()">Update</button>
-                  <button class="btn btn-md rounded font-sm hover-up" id="delete" onclick="cancel()">Delete</button>
+            <div style="padding-left:270px;">
+                  <button class="btn btn-light rounded font-sm mr-5 text-body hover-up" type="submit">Update</button>
+                  <!-- <button class="btn btn-md rounded font-sm hover-up" id="delete">Delete</button> -->
               </div>
             </form>
         </section> 
@@ -332,7 +335,212 @@
     <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
+<!-- <script>
+
+
+function previewImages() {
+      const input = document.getElementById('Pro_img');
+      const previewContainer = document.getElementById('imagePreviewContainer');
+      const files = input.files;
+
+      // Clear previous previews
+      previewContainer.innerHTML = '';
+
+      for (const file of files) {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+              const preview = document.createElement('img');
+              preview.src = e.target.result;
+              preview.classList.add('image-preview');
+              previewContainer.appendChild(preview);
+          };
+
+          reader.readAsDataURL(file);
+      }
+  }
+      
+</script>  -->
+<script>
+
+      function nameFun() {
+       
+            const name = document.getElementById("product_name").value.trim();
+            nameRegex = /^[a-zA-Z]{3,}$/;
+            const nameError = document.getElementById("nameErr");
+
+            if (name == "") {
+                  nameError.innerHTML = "Product name is required"
+            } else if (!nameRegex.test(name)) {
+                  nameError.innerHTML = "Invalid Name, no spaces at the beginnig"
+            } else {
+                  nameError.innerHTML = "";
+            }
+
+      }
+
+      function desFun() {
+           
+            const des = document.getElementById("product_des").value.trim();
+            const desError = document.getElementById("desErr");
+
+            if (des == "") {
+                  desError.innerHTML = " Product description is required"
+            } else {
+                  desError.innerHTML = ""
+            }
+      }
+
+      function regFun() {
+        
+            const reg = document.getElementById("regprice").value.trim();
+            const regError = document.getElementById("regErr");
+
+
+            const positiveNumberRegex = /^[0-9]*$/;
+
+            if (reg === "" || !positiveNumberRegex.test(reg)) {
+                  regError.innerHTML = "Invalid Price. Please enter a positive number.";
+            } else {
+                  regError.innerHTML = "";
+            }
+      }
+
+      function offFun() {
+         
+            const op = document.getElementById("offprice").value.trim();
+            const rp = document.getElementById("regprice").value.trim();
+            const offError = document.getElementById("offErr");
+
+
+            const positiveNumberRegex = /^[0-9]*$/;
+
+
+            if (op === '' || !positiveNumberRegex.test(op)) {
+                  offError.innerHTML = "Invalid Price. Please enter a positive number.";
+            } else if (parseFloat(op) > parseFloat(rp)) {
+                  offError.innerHTML = "Offer Price cannot exceed regular price.";
+            } else {
+                  offError.innerHTML = "";
+            }
+      }
+
+      function stockFun() {
+           
+            const stock = document.getElementById("stock").value.trim();
+            
+            const stockError = document.getElementById("stockErr");
+
+            if (stock == "") {
+            
+                  stockError.innerHTML = "Provide a valid stock"
+            } else {
+                  stockError.innerHTML = ""
+            }
+
+      }
+
+
+   
+
+
+
+
+
+
+
+      function validateImages() {
+            const fileInput = document.getElementById('Pro_img');
+            const imageError = document.getElementById('imageError');
+            const allowedExtensions = ['jpg', 'jpeg', 'png'];
+
+            if(fileInput.length!=5){
+                  document.getElementById("imageError").innerHTML="Image is require"
+            }else{
+                  document.getElementById("imageError").innerHTML=""
+            }
+
+            for (const file of fileInput.files) {
+                  const fileExtension = file.name.split('.').pop().toLowerCase();
+                  if (!allowedExtensions.includes(fileExtension)) {
+                        imageError.textContent = 'Invalid file format. Please upload JPEG or PNG files.';
+                        return false;
+                  }
+            }
+      }
+
+
+      function previewImages() {
+           
+            const input = document.getElementById('Pro_img');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const files = input.files;
+
+            // Clear previous previews
+            previewContainer.innerHTML = '';
+
+            for (const file of files) {
+                  const reader = new FileReader();
+
+                  reader.onload = function (e) {
+                        const preview = document.createElement('img');
+                        preview.src = e.target.result;
+                        preview.classList.add('image-preview');
+                        previewContainer.appendChild(preview);
+                  };
+
+                  reader.readAsDataURL(file);
+            }
+      }
+
+
+
+      document.getElementById("pdtform").addEventListener("submit",(e)=>{
+
+            stockFun()
+            nameFun()
+            desFun()
+            regFun()
+            offFun()
+            validateImages()
+         
+             const nameErr=document.getElementById("nameErr")           
+            const deErr=document.getElementById("desErr")
+            const regErr=document.getElementById("regErr")
+            const offErr=document.getElementById("offErr")
+            const stockErr=document.getElementById("stockErr")
+            const imageErr=document.getElementById("imageError")
+         
+
+            if(nameErr.innerHTML||desErr.innerHTML||regErr.innerHTML||offErr.innerHTML||stockErr.innerHTML||imageErr.innerHTML){
+                 
+                  e.preventDefault()
+            }
+
+      })
+
+
+
+      function deleteImage(id,index){
+
+          $.ajax({
+            url:"/admin/deleteimage",
+            method:"post",
+            data:{
+                  id,
+                  index
+            },
+            success:(response)=>{
+          
+           if(response.status === "delete"){
+            window.location.reload()
+           }
+            }
+          })
+      }
+</script>
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-transactions-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:33 GMT -->
