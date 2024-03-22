@@ -3,10 +3,15 @@ const User = require('../model/userModel');
 
 const isLogin = async (req, res, next)=>{
       try {
+            console.log(req.session.email);
             if(req.session.email){
-                  res.redirect('/')
-            }else {
+                  console.log("dddddd");
                   next();
+                  
+            }else {
+                  console.log("rrrrrr");
+                  res.redirect('/')
+               
             }
 
       } catch (error) {
@@ -16,7 +21,7 @@ const isLogin = async (req, res, next)=>{
 
 const isLogOut = async (req,res,next)=>{
       try {
-            if(req,res,next){
+            if(req.session.email){
                   res.redirect('/')
             }else{
                  next()
