@@ -302,7 +302,7 @@ const detailedProduct = async (req,res) =>{
             res.render("user/editAddress",{findAddress})
             
       } catch (error) {
-            console.log(eroor);
+            console.log(error);
             
       }
  }
@@ -354,6 +354,37 @@ const detailedProduct = async (req,res) =>{
       }
  }
 
+ //////////////Loading change Password page//////////////
+
+ const changePassword = async(req,res)=>{
+     try {
+
+      res.render('user/changePassword')
+
+      
+     } catch (error) {
+      console.log(error);
+      
+     }
+ }
+
+ ////////////Changing Password///////////////
+
+ const postPassword = async (req,res)=>{
+      try {
+            const {current,New,confirm} = req.body
+            // console.log(current,New,confirm);
+            const findUser = await User.findOne({email:req.session.email})
+            // console.log(findUser);
+            const passwordMatch = await bcrypt.compare(current,findUser.Password)
+
+            
+      } catch (error) {
+            console.log(error);
+            
+      }
+ }
+
 
 
 
@@ -375,7 +406,9 @@ module.exports = {
       postAddress,
       editAddress,
       postedit,
-      deleteAddress
+      deleteAddress,
+      changePassword,
+      postPassword
 }
 
 

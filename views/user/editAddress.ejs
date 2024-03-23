@@ -456,7 +456,7 @@
                                             <a class="nav-link" id="orders-tab"  href="#orders"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="track-orders-tab"  href="#track-orders" ><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                            <a class="nav-link" id="track-orders-tab"  href="#track-orders" ><i class="fi-rs-shopping-cart-check mr-10"></i>Change Password</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link active" id="address-tab"  href="#address"><i class="fi-rs-marker mr-10"></i>My Address</a>
@@ -482,39 +482,47 @@
                                             </div>
                                             <div class="card-body">
                                                 <!-- <p>Already have an account? <a href="page-login-register.html">Log in instead!</a></p> -->
-                                                <form method="post">
+                                                <form method="post" id="editForm">
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
                                                             <label>Name <span class="required">*</span></label>
-                                                            <input  class="form-control square" name="name" value="<%= findAddress.name %>" type="text">
+                                                            <input  class="form-control square" name="name" id="uname" value="<%= findAddress.name %>" onblur="nameFun()" type="text">
+                                                            <p id="nameErr" style="color: red;"></p>
                                                         </div>
                                                         <div class="form-group col-md-6">
                                                             <label>Mobile <span class="required">*</span></label>
-                                                            <input  class="form-control square" name="mobile" value="<%= findAddress.mobile %>" type="text">
+                                                            <input  class="form-control square" name="mobile" id="umobile" value="<%= findAddress.mobile %>" onblur="mobFun()" type="text">
+                                                            <p id="mobileErr" style="color: red;"></p>
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>Pincode<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="pincode" value="<%= findAddress.pin %>" type="number">
+                                                            <input  class="form-control square" name="pincode" id="upincode" value="<%= findAddress.pin %>" onblur="pinFun()" type="number">
+                                                            <p id="pincodeErr" style="color: red;"></p>
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>Locality<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="locality" value="<%= findAddress.location %>" type="text">
+                                                            <input  class="form-control square" name="locality" id="ulocality" value="<%= findAddress.location %>" onblur="locFun()" type="text">
+                                                            <p id="localityErr" style="color: red;"></p>
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>Address<span class="required">*</span></label>
-                                                            <textarea name="address" id="uaddress" cols="30" rows="10" ><%= findAddress.address %></textarea>
+                                                            <textarea name="address" id="uaddress" cols="30" rows="10" onblur="addFun()" ><%= findAddress.address %></textarea>
+                                                            <p id="addressErr" style="color: red;"></p>
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>City<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="city" value="<%= findAddress.city %>" type="text">
+                                                            <input  class="form-control square" name="city" id="ucity" value="<%= findAddress.city %>" onblur="cityFun()" type="text">
+                                                            <p id="cityErr" style="color: red;"></p>
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>State<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="state"value="<%= findAddress.state %>" type="text">
+                                                            <input  class="form-control square" name="state" id="ustate" value="<%= findAddress.state %>" onblur="stateFun()" type="text">
+                                                            <p id="stateErr" style="color: red;"></p>
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>Country<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="country"value="<%= findAddress.country%>" type="text">
+                                                            <input  class="form-control square" name="country" id="ucountry" value="<%= findAddress.country%>" onblur="counFun()" type="text">
+                                                            <p id="countryErr" style="color: red;"></p>
                                                         </div>
                                                         <div class="col-lg-6 mb-20">
                                                             <label for="address-type">Address type</label>
@@ -670,6 +678,156 @@
         </div>
     </div>
     <!-- Vendor JS-->
+    <script>
+        function nameFun() {
+          //  alert("naame")
+            const name = document.getElementById("uname").value.trim()
+            const nameErr = document.getElementById("nameErr")
+            nameRegex = /^[A-Z][a-zA-Z]*([ ][A-Z][a-zA-Z]*)?$/;
+
+            if (name === "") {
+                nameErr.innerHTML = "Name is required"
+          } else if (!nameRegex.test(name)) {
+                nameErr.innerHTML = "Invalid Name!!"
+          } else {
+                nameErr.innerHTML = "";
+          }
+
+
+        }
+
+        function mobFun() {
+            //alert("mob")
+            const mobile = document.getElementById("umobile").value.trim()
+            const mobileErr = document.getElementById("mobileErr");
+            mobRegex = /^(?!0{10})[1-9][0-9]{9}$/;
+
+            if (mobile == ""){
+                mobileErr.innerHTML = "Mobile number is required"
+            }else if (!mobRegex.test(mobile)){
+                mobileErr.innerHTML = "Invalid mobile number"
+            }else{
+                mobileErr.innerHTML = "";
+            }
+        }
+
+        function pinFun(){
+            //<!-- alert("pincode") -->
+            const pincode = document.getElementById("upincode").value.trim()
+            const pincodeErr = document.getElementById("pincodeErr");
+            pinRegex =/^\d{6}$/;
+
+            if(pincode == ""){
+                pincodeErr.innerHTML = "pincode is required"
+            }else if(!pinRegex.test(pincode)){
+                pincodeErr.innerHTML = "Invalid pincode"
+            }else{
+                pincodeErr.innerHTML = ""
+            }
+
+        }
+
+        function locFun(){
+           // alert("location")
+            const locality = document.getElementById("ulocality").value.trim();
+            const localityErr = document.getElementById("localityErr");
+
+            if(locality == ""){
+                localityErr.innerHTML = "locality is required"
+            }else{
+                localityErr.innerHTML = ""
+            }
+
+        }
+
+        function addFun(){
+           // alert("addres")
+            const address = document.getElementById("uaddress").value.trim();
+            const addressErr = document.getElementById("addressErr");
+            addreeRegex = /^\d+\s+[\w\s]+\s+\w+,\s+\w+,\s+\w+\s+\d+$/
+
+            if(address == ""){
+                addressErr.innerHTML = "Address id reqired"
+            }else if(!addressRegex.test(address)){
+                addressErr.innerHTML = "Invalid Address"
+            }else{
+                addressErr.innerHTML = ""
+            }
+
+        }
+
+        function cityFun(){
+           // alert("city")
+            const city = document.getElementById("ucity").value.trim();
+            const cityErr = document.getElementById("cityErr");
+
+            if(city == ""){
+                cityErrr.innerHTML = "City is required"
+           
+            }else{
+                cityErr.innerHTML = ""
+            }
+        }
+
+        function stateFun(){
+            //alert("state")
+            const state = document.getElementById("ustate").value.trim();
+            const stateErr = document.getElementById("sateErr");
+
+            if(state == ""){
+                stateErr.innerHTML = "State is required"
+            }else{
+                stateErr.innerHTML = ""
+            }
+        }
+
+        function counFun(){
+            //alert("con")
+            const country = document.getElementById("ucountry").value.trim();
+            const countryErr = document.getElementById("countryErr").value.trim();
+
+            if(country == ""){
+                countryErr.innerHTML = "Country is required"
+            }else{
+                countryErr.innerHTML = ""
+            }
+        }
+
+        document.getElementById("editForm").addEventListener("submit",(e)=>{
+
+            nameFun(),
+          
+            mobFun(),
+           
+            pinFun(),
+      
+            locFun(),
+           
+            cityFun(),
+
+            counFun()
+
+
+            const nameErr = document.getElementById("nameErr");
+            const mobileErr = document.getElementById("mobileErr");
+            const pincodeErr= document.getElementById("pincodeErr");
+            const localityErr = document.getElementById("localityErr");
+            const cityErr = document.getElementById("cityErr");
+            const countryErr = document.getElementById("countryErr");
+
+            if(nameErr.innerHTML||mobileErr.innerHTML||pincodeErr.innerHTML||localityErr.innerHTML||cityErr.innerHTML||countryErr.innerHTML){
+                e.preventDefault();
+      
+            };
+        });
+
+
+
+
+
+
+
+    </script>
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
