@@ -23,6 +23,10 @@ router.post('/editAddress',middleware.isLogin,userController.postedit);
 router.get('/deleteAddress',middleware.isLogin,userController.deleteAddress);
 router.get('/changePassword',middleware.isLogin,userController.changePassword);
 router.post('/changePassword',middleware.isLogin,userController.postPassword);
+router.get('/userAccount',middleware.isLogin,userController.userAccount);
+router.get('/userAccount-edit',middleware.isLogin,userController.userAccountedit);
+router.post('/userAccount-edit',middleware.isLogin,userController.editPost);
+
 
 
 

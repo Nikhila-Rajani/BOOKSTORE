@@ -5,11 +5,11 @@ const isLogin = async (req, res, next)=>{
       try {
             console.log(req.session.email);
             if(req.session.email){
-                  console.log("dddddd");
+                
                   next();
                   
             }else {
-                  console.log("rrrrrr");
+                 
                   res.redirect('/')
                
             }

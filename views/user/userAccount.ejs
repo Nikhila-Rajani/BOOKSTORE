@@ -70,7 +70,7 @@
                     <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
                         <nav>
                             <ul>
-                                <li><a class="active" href="index.html">Home <i class="fi-rs-angle-down"></i></a>
+                                <li><a class="active" href="/home">Home <i class="fi-rs-angle-down"></i></a>
                                     <ul class="sub-menu">
                                         <li><a href="index.html">Home 1</a></li>
                                         <li><a href="index-2.html">Home 2</a></li>
@@ -435,7 +435,7 @@
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow">Home</a>
+                    <a href="/" rel="nofollow">Home</a>
                     <span></span> Pages
                     <span></span> Account
                 </div>
@@ -450,19 +450,19 @@
                                 <div class="dashboard-menu">
                                     <ul class="nav flex-column" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link " id="dashboard-tab"  href="#dashboard" ><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                            <a class="nav-link " id="dashboard-tab"  href="/userProfile"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="orders-tab"  href="#orders"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                            <a class="nav-link" id="orders-tab"  href="#orders" role="tab" ><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="track-orders-tab"  href="/changePassword" ><i class="fi-rs-shopping-cart-check mr-10"></i>Change Password</a>
+                                            <a class="nav-link" id="track-orders-tab"   href="/changePassword" ><i class="fi-rs-shopping-cart-check mr-10"></i>Change Password</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="address-tab"  href="#address"><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                            <a class="nav-link" id="address-tab"  href="/userAddress" ><i class="fi-rs-marker mr-10"></i>My Address</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="account-detail-tab"  href="/userAccount"><i class="fi-rs-user mr-10"></i>Account details</a>
+                                            <a class="nav-link active" id="account-detail-tab"  href="#account-detail"><i class="fi-rs-user mr-10"></i>Account details</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="page-login-register.html"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
@@ -471,83 +471,55 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <div class="tab-content dashboard-content">
-
-
-
-                                    <div>
+                                <!-- <div class="tab-content dashboard-content">
+                                    <div class="tab-pane fade active show" id="dashboard" >
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5>Account Details</h5>
+                                                <h5 class="mb-0"></h5>
                                             </div>
                                             <div class="card-body">
-                                                <!-- <p>Already have an account? <a href="page-login-register.html">Log in instead!</a></p> -->
-                                                <form method="post" id="editForm" >
-                                                    <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label>Name <span class="required">*</span></label>
-                                                            <input  class="form-control square" name="name" id="uname" type="text" onblur="nameFun()">
-                                                            <p id="nameErr" style="color: red;"></p>
-                                                         
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label>Mobile <span class="required">*</span></label>
-                                                            <input  class="form-control square" name="mobile" id="umobile" type="text" onblur="mobFun()" >
-                                                            <p id="mobileErr" style="color: red;"></p>
-                                                            
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Pincode<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="pincode" id="upincode" type="number" onblur="pinFun()" >
-                                                            <p id="pincodeErr" style="color: red;"></p>
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Locality<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="locality" id="ulocality" type="text" onblur="locFun()">
-                                                            <p id="localityErr" style="color: red;"></p>
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Address<span class="required">*</span></label>
-                                                            <textarea name="address" id="uaddress" cols="30" rows="10" onblur="addFun()"></textarea>
-                                                            <p id="addressErr" style="color: red;"></p>
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>City<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="city" id="ucity" type="text" onblur="cityFun()">
-                                                            <p id="cityErr" style="color: red;"></p>
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>State<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="state" id="ustate" type="text"onblur="stateFun()">
-                                                            <p id="stateErr" style="color: red;"></p>
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Country<span class="required">*</span></label>
-                                                            <input  class="form-control square" name="country" id="ucountry" type="text" onblur="counFun()" >
-                                                            <p id="countryErr" style="color: red;"></p>
-                                                        </div>
-                                                        <div class="col-lg-6 mb-20">
-                                                            <label for="address-type">Address type</label>
-                                                            <select name="addresstype" id="addresstype">
-                                                                <option value="home">Home</option>
-                                                                <option value="work">Work</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit" onclick="addAddress">Save</button>
-                                                            <button type="submit" class="btn btn-fill-out submit" style="margin-left: 30px;" name="submit" onclick="cancel()" value="Submit">Cancel</button>
-                                                        </div>
-                                                        
-                                                    </div>
-                                                </form>
+                                                <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">edit your password and account details.</a></p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    
+                                   
+                                   
+                                   
+                                </div> -->
+                                <div  id="track-orders" >
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">ACCOUNT DETAILS</h5>
+                                        </div>
+                                        <div class="card-body contact-from-area">
+                                          <div class="row">
+                                              <div class="col-lg-8">
+                                                  <div class="contact-form-style mt-30 mb-50">
+                                                      <div class="input-style mb-20">
+                                                          <label>Name</label>
+                                                          <input id="name" type="text" class="square" value="<%= findUser.username %>" readonly>
+                                                      </div>
+                                                      <div class="input-style mb-20">
+                                                          <label>Email</label>
+                                                          <input id="email" type="email" class="square" value="<%= findUser.email %>" readonly>
+                                                      </div>
+                                                      <div class="input-style mb-20">
+                                                          <label>Phone Number</label>
+                                                          <input id="phone" type="tel" class="square" value="<%= findUser.mobile %>" readonly>
+                                                      </div>
+                                                      <a href="/userAccount-edit?_id=<%= findUser._id %>"><button class="edit-btn" type="button">Edit</button></a>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      
+                                    </div>
                                 </div>
                             </div>
+                           
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -680,156 +652,6 @@
         </div>
     </div>
     <!-- Vendor JS-->
-    <script>
-        function nameFun() {
-           // alert("naame")
-              const name = document.getElementById("uname").value.trim()
-              const nameErr = document.getElementById("nameErr")
-              nameRegex = /^[A-Z][a-zA-Z]*([ ][A-Z][a-zA-Z]*)?$/;
-  
-              if (name === "") {
-                  nameErr.innerHTML = "Name is required"
-            } else if (!nameRegex.test(name)) {
-                  nameErr.innerHTML = "Invalid Name!!"
-            } else {
-                  nameErr.innerHTML = "";
-            }
-  
-  
-          }
-  
-          function mobFun() {
-              //alert("mob")
-              const mobile = document.getElementById("umobile").value.trim()
-              const mobileErr = document.getElementById("mobileErr");
-              mobRegex = /^(?!0{10})[1-9][0-9]{9}$/;
-  
-              if (mobile == ""){
-                  mobileErr.innerHTML = "Mobile number is required"
-              }else if (!mobRegex.test(mobile)){
-                  mobileErr.innerHTML = "Invalid mobile number"
-              }else{
-                  mobileErr.innerHTML = "";
-              }
-          }
-  
-          function pinFun(){
-              //alert("pincode")
-              const pincode = document.getElementById("upincode").value.trim()
-              const pincodeErr = document.getElementById("pincodeErr");
-              pinRegex =/^\d{6}$/
-              ;
-  
-              if(pincode == ""){
-                  pincodeErr.innerHTML = "pincode is required"
-              }else if(!pinRegex.test(pincode)){
-                  pincodeErr.innerHTML = "Invalid pincode"
-              }else{
-                  pincodeErr.innerHTML = ""
-              }
-  
-          }
-  
-          function locFun(){
-             //alert("location")
-              const locality = document.getElementById("ulocality").value.trim();
-              const localityErr = document.getElementById("localityErr");
-  
-              if(locality == ""){
-                  localityErr.innerHTML = "locality is required"
-              }else{
-                  localityErr.innerHTML = ""
-              }
-  
-          }
-  
-          function addFun(){
-             //alert("addres")
-              const address = document.getElementById("uaddress").value.trim();
-              const addressErr = document.getElementById("addressErr");
-              addreeRegex = /^\d+\s+[\w\s]+\s+\w+,\s+\w+,\s+\w+\s+\d+$/
-  
-              if(address == ""){
-                  addressErr.innerHTML = "Address id reqired"
-              }else if(!addressRegex.test(address)){
-                  addressErr.innerHTML = "Invalid Address"
-              }else{
-                  addressErr.innerHTML = ""
-              }
-  
-          }
-  
-          function cityFun(){
-             //alert("city")
-              const city = document.getElementById("ucity").value.trim();
-              const cityErr = document.getElementById("cityErr");
-           
-              if(city == ""){
-                //<!-- alert("inside") -->
-                  cityErr.innerHTML = "City is required"
-             
-              }else{
-                  cityErr.innerHTML = ""
-              }
-          }
-  
-          function stateFun(){
-             // alert("state")
-              const state = document.getElementById("ustate").value.trim();
-              const stateErr = document.getElementById("stateErr");
-  
-              if(state == ""){
-                  stateErr.innerHTML = "State is required"
-              }else{
-                  stateErr.innerHTML = ""
-              }
-          }
-  
-          function counFun(){
-              //alert("con")
-              const country = document.getElementById("ucountry").value.trim();
-              const countryErr = document.getElementById("countryErr")
-  
-              if(country == ""){
-                  countryErr.innerHTML = "Country is required"
-              }else{
-                  countryErr.innerHTML = ""
-              }
-          }
-  
-          document.getElementById("editForm").addEventListener("submit",(e)=>{
-  
-              nameFun(),
-            
-              mobFun(),
-             
-              pinFun(),
-        
-              locFun(),
-             
-              cityFun(),
-              counFun()
-  
-  
-              const nameErr = document.getElementById("nameErr");
-              const mobileErr = document.getElementById("mobileErr");
-              const pincodeErr= document.getElementById("pincodeErr");
-              const localityErr = document.getElementById("localityErr");
-              const cityErr = document.getElementById("cityErr");
-              const countryErr = document.getElementById("countryErr");
-  
-              if(nameErr.innerHTML||mobileErr.innerHTML||pincodeErr.innerHTML||localityErr.innerHTML||cityErr.innerHTML||countryErr.innerHTML){
-                e.preventDefault();
-        
-              };
-          });
-
-
-          function cancel(){
-            window.location.href="/userAddress"
-          }
-  
-    </script>
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>

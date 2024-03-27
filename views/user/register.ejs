@@ -489,6 +489,15 @@
                                         <div class="heading_s1">
                                             <h3 class="mb-30">Create an Account</h3>
                                         </div>
+                                        <% if (locals.message) { %>
+                                            <p id="msg" class="text-danger"><%= locals.message %></p>
+                                            <script>
+                                                setTimeout(()=>{
+                                                    document.getElementById('msg').style.display = 'none'
+                                                },3000)
+                                            </script>
+                                         
+                                        <% } %>
                                       
                                         <script>
                                             setTimeout(()=>{
