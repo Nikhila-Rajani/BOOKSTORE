@@ -137,7 +137,7 @@
                                         <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                     </div>
                                     <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                        <button type="submit" class="button button-add-to-cart" onclick="addtoCart('<%= proData._id %>')">Add to cart</button>
                                         <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                         <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                     </div>
@@ -886,8 +886,8 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand"><%= proData.regularPrice %></span></ins>
-                                                <ins><span class="old-price font-md ml-15"><%= proData.offerPrice %></span></ins>
+                                                <ins><span class="text-brand"><%= proData.offerPrice %></span></ins>
+                                                <ins><span class="old-price font-md ml-15"><%= proData.regularPrice %></span></ins>
                                                 <span class="save-price  font-md color3 ml-15">25% Off</span>
                                             </div>
                                         </div>
@@ -912,7 +912,7 @@
                                                 <li><a href="#" data-color="Green"><span class="product-color-green"></span></a></li>
                                                 <li><a href="#" data-color="Purple"><span class="product-color-purple"></span></a></li>
                                             </ul>
-                                        </div> -->
+                                        </div> 
                                         <!-- <div class="attr-detail attr-size">
                                             <strong class="mr-10">Size</strong>
                                             <ul class="list-filter size-filter font-small">
@@ -931,7 +931,14 @@
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
                                             <div class="product-extra-link2">
-                                                <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                                <% if (locals.cartStatus) { %>
+                                                    <button type="submit" class="button button-add-to-cart" onclick="viewCart()">View cart</button>
+                                                   
+                                                <% } else{%>
+
+                                               
+                                                <button type="submit" class="button button-add-to-cart" onclick="addtoCart('<%= proData._id %>','<%= proData.offerPrice %>')">Add to cart</button>
+                                                <% }%>
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
                                                 <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                             </div>
@@ -1599,7 +1606,7 @@
         <div class="preloader d-flex align-items-center justify-content-center">
             <div class="preloader-inner position-relative">
                 <div class="text-center">
-                    <h5 class="mb-5">Now Loading</h5>
+                    <h5 class="mb-5">Loading</h5>
                     <div class="loader">
                         <div class="bar bar1"></div>
                         <div class="bar bar2"></div>
@@ -1633,7 +1640,64 @@
     <!-- Template  JS -->
     <script src="assets/js/maind134.js?v=3.4"></script>
     <script src="assets/js/shopd134.js?v=3.4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
+<script>
+    function addtoCart(proId,offerPrice){
+
+        $.ajax({
+            url:'/cart',
+            method:'post',
+            data:{
+                proId,
+                offerPrice
+            },
+            success: (response) => {
+                if (response.status === "viewcart") {
+                   
+                    Swal.fire({
+                        title: "Good job!",
+                        text: "Product added to cart!",
+                        icon: "success",
+                        customClass: {
+                            confirmButton: 'black-ok-button'
+                        },
+                        iconColor: '#3F2520'
+                    }) .then((result)=>{
+                        window.location.reload()
+                     })
+
+                     
+                  
+                } else if (response.status === true) {
+                    Swal.fire({
+                        title: "Good job!",
+                        text: "Product added to cart!",
+                        icon: "success",
+                        customClass: {
+                            confirmButton: 'black-ok-button'
+                        },
+                        iconColor: '#3F2520'
+                    }) .then((result)=>{
+                        window.location.reload()
+                     })
+
+
+                  
+                }
+
+            }
+        })
+
+        
+    
+    }
+
+    function viewCart(){
+        window.location.href = "/cart"
+    }
+</script>
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-right.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:05 GMT -->

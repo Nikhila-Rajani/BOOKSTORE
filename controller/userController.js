@@ -4,6 +4,7 @@ const generateOTP = require('../controller/otpGenerate');
 const bcrypt = require('bcrypt');
 const Product = require('../model/ProductModel');
 const Address = require('../model/addressModel');
+const Cart = require('../model/cartModel');
 
 const Email = process.env.Email;
 const Password = process.env.Password;
@@ -170,6 +171,7 @@ const verifyLogin = async (req, res) => {
                         if (findUser.is_blocked) {
                               console.log('user has been blocked')
                           } else {
+                              req.session.user = findUser
                               req.session.email = email
                             
                               res.redirect('/');
@@ -193,10 +195,18 @@ const verifyLogin = async (req, res) => {
 const detailedProduct = async (req, res) => {
       try {
             const id = req.query.id
-           
+            const user = req.session.user
+           const cartFind = await Cart.findOne({user:user,"products.productId":id})
             const proData = await Product.findById({ _id: id })
+
+            let cartStatus
+            if(cartFind){
+              cartStatus=true;
+            }else{
+              cartStatus=false;
+            }
            
-            res.render("user/detailedProduct", { proData });
+            res.render("user/detailedProduct", { proData ,cartStatus});
 
       } catch (error) {
             console.log(error);
@@ -486,7 +496,23 @@ const editPost = async (req,res) =>{
       }
 }
 
+/////////// Search product///////
 
+const searchProduct = async (req,res) => {
+      try{
+            console.log("ivde ndeyy");
+            const {searchDataValue} = req.body
+            console.log(req.body);
+            const searchProducts = await Product.find({name:{
+                $regex: searchDataValue , $options: 'i'
+            }})
+            console.log(searchProducts);
+            res.json({status:"searched",searchProducts})
+    
+        }catch(error){
+            console.log(error);
+        }
+}
 
 
 
@@ -513,7 +539,8 @@ module.exports = {
       postPassword,
       userAccount,
       userAccountedit,
-      editPost
+      editPost,
+      searchProduct
 }
 
 

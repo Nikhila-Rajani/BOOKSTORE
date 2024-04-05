@@ -98,6 +98,21 @@ const unblockUser = async (req,res)=>{
       }
 }
 
+// const toggleuser = async (req,res)=>{
+//       try {
+//            const id = req.query.id;
+//            const findUser = await User.findById({_id :id});
+//            findUser.is_blocked = !findUser.is_blocked
+//            await findUser.save();
+           
+
+//             res.redirect('/admin/adminUser')
+//       } catch (error) {
+//             console.log("There was an error in blocking user",error);
+            
+//       }
+// }
+
 
 
 
@@ -111,4 +126,5 @@ module.exports ={
       adminUser,
       blockuser,
       unblockUser,
+
 }

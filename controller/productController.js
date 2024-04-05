@@ -173,6 +173,9 @@ const deleteImage = async(req,res)=>{
 
 
 
+
+
+
 module.exports = {
       loadAddpro,
       addProduct,
@@ -180,7 +183,8 @@ module.exports = {
       productBlock,
       productUnblock,
       editPro,
-      deleteImage
+      deleteImage,
+      
       
       
 }
