@@ -12,6 +12,7 @@ const userCart = async(req,res)=>{
       try{
             const findUser = req.session.user;
             const findCart = await Cart.findOne({user:findUser._id}).populate('products.productId')
+
             console.log("ok kitti",findCart);
             res.render('user/userCart',{findCart})
 

@@ -15,14 +15,24 @@ const adminCategory = async (req, res) => {
 ///////////create category post////////////////////////
 const addCategory = async (req, res) => {
       try {
+            const catData = await Category.find({})
             const { catname, catdescription } = req.body;
-            const newCategory = new Category({
-                  name: catname,
-                  description: catdescription
-            })
-            const findCategory = await newCategory.save();
+            const existingCategory = await Category.findOne({name:catname})
+            // console.log(existingCategory);
+            if(!existingCategory){
+                  const newCategory = new Category({
+                        name: catname,
+                        description: catdescription
+                  })
+                  const findCategory = await newCategory.save();
             console.log(findCategory);
             res.redirect("/admin/adminCategory")
+            }else{
+                  console.log("Category already Exists");
+                  res.render("admin/adminCategory",{message:"Category already Exists",catData},);
+            }
+            
+            
 
 
 
@@ -57,13 +67,13 @@ const loadEdit = async (req, res) => {
 ////////////editing category//////
 const editcat = async (req, res) => {
       try {
-            console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+            // console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
 
             const name = req.body.name
             const description = req.body.description
             const id = req.body.id
 
-            console.log(name, description, id);
+            // console.log(name, description, id);
 
             const allData = await Category.find({})
             const allName = allData.map((x) => x.name)
@@ -82,7 +92,7 @@ const editcat = async (req, res) => {
             if (unique) {
                   res.json({ status: "unique" })
             } else {
-                  console.log("helooooo")
+                  // console.log("helooooo")
 
                   const catData = await Category.findByIdAndUpdate({ _id: id }, {
                         $set: {
@@ -100,7 +110,7 @@ const editcat = async (req, res) => {
 
 const blockunblock = async(req,res)=>{
       try {
-            console.log("hello");
+            // console.log("hello");
             const catid = req.body.id;
             const categoryData = await Category.findById(catid);
          if(categoryData.is_blocked === false){

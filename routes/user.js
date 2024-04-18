@@ -39,9 +39,17 @@ router.delete('/deletecart',cartController.deletecart);
 router.get('/checkoutpage',cartController.checkOut);
 
 router.post('/placeOrder',orderController.placeOrder);
-router.get('/ordersuccess',orderController.orderSuccess)
+router.get('/ordersuccess',orderController.orderSuccess);
+router.get('/orderDetails',orderController.orderDetails)
+router.get('/viewOrder',orderController.viewOrder);
 
 router.post('/search',userController.searchProduct)
+
+router.get('/sort',userController.sortItems)
+router.get('/filter',userController.filterCategory);
+router.post('/cancelOrder',orderController.userCancelOrder)
+router.get("/resendOtp",userController.resendOtp)
+
 
 
 

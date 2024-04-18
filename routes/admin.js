@@ -3,6 +3,7 @@ const router = express();
 const adminController  = require("../controller/adminController");
 const categoryController = require("../controller/CategoryController");
 const productController = require("../controller/productController");
+const orderController = require('../controller/orderControlller')
 const upload = require('../multer/multer');
 const middleware = require('../middleware/adminAuth')
 
@@ -13,8 +14,9 @@ router.post('/',adminController.verifyAdmin);
 router.get('/adminDashboard',adminController.adminDashboard);
 router.get('/adminproduct',adminController.adminproduct);
 router.get('/adminUser',adminController.adminUser);
-router.get('/block-user',adminController.blockuser);
-router.get('/unblock-user',adminController.unblockUser);
+//router.get('/block-user',adminController.blockuser);
+//router.get('/unblock-user',adminController.unblockUser);
+router.get('/unblock-user',adminController.toggleuser);
 
 ///////////////category///////////////////
 router.get('/adminCategory',categoryController.adminCategory);
@@ -30,8 +32,14 @@ router.post('/addProduct',upload.array('image'),productController.addProduct);
 router.get('/productUnblock',productController.productUnblock)
 router.get('/productBlock',productController.productBlock);
 router.get('/editProduct',productController.editProduct);
-router.post('/editProduct',upload.array('image'),productController.editPro)
-router.post('/deleteimage',productController.deleteImage)
+router.post('/editProduct',upload.array('image'),productController.editPro);
+router.post('/deleteimage',productController.deleteImage);
+
+////////Order/////////////
+
+router.get('/orderList',adminController.orderList)
+router.get('/orderDetails',adminController.orderDetails); 
+router.post('/changeStatus',orderController.adminChangeStatus)
 
 
 

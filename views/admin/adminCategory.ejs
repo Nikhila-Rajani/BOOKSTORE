@@ -226,6 +226,10 @@
                                     <p class="text-danger" id="deserror"></p>
                                     <p id="formerror" class="text-danger"></p>
                                 </div>
+                                <% if (locals.message) { %>
+                                    <p style="color:red"><%= message %></p>
+                                 
+                                <% } %>
                                 <div class="d-grid">
                                     <button class="btn btn-primary">Create category</button>
                                 </div>
@@ -471,7 +475,8 @@
     <script>
       function name(){
             const name = document.getElementById("product_name").value 
-            const nameRegex = /^[a-zA-Z]{3,}(?:['., -][a-zA-Z ]*)*$/;
+            const nameRegex =/^(?!.*\b([a-z]{3,}(?:['., -][a-z ]*)*)\b)([A-Z][a-z]{2,}(?:['., -][a-zA-Z ]*)*)$/
+            ;
          
 
             if (name === "") {
@@ -479,7 +484,7 @@
               } else if (name.length < 3) {
                   document.getElementById("nameerror").innerHTML = "Name should contain at least 3 letters";
               } else if (!nameRegex.test(name)) {
-                  document.getElementById("nameerror").innerHTML = "Name should be alphabets";
+                  document.getElementById("nameerror").innerHTML = "Name should be unique";
               } else {
                   document.getElementById("nameerror").innerHTML = "";
               }

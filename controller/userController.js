@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const Product = require('../model/ProductModel');
 const Address = require('../model/addressModel');
 const Cart = require('../model/cartModel');
+const Category = require('../model/CategoryModel');
 
 const Email = process.env.Email;
 const Password = process.env.Password;
@@ -17,6 +18,9 @@ const transport = nodemailer.createTransport({
       auth: {
             user: Email,
             pass: Password,
+      },
+      tls:{
+            rejectUnauthorized:false
       }
 })
 
@@ -48,7 +52,8 @@ const userHome = async (req, res) => {
       try {
             const ProductData = await Product.find({ is_blocked: false })
             const email = req.session.email
-            res.render("user/home", { ProductData, email })
+            const catData = await Category.find({is_blocked: false}) 
+            res.render("user/home", { ProductData, email,catData })
 
       } catch (error) {
             console.log(error);
@@ -136,7 +141,7 @@ const getOtp = async (req, res) => {
 }
 const verifyotp = async (req, res) => {
       try {
-           
+           console.log("verify")
             if (req.session.Data.otp == req.body.otp) {
                   console.log('stored otp :', req.session.Data.otp)
                   console.log('from body', req.body.otp);
@@ -149,9 +154,9 @@ const verifyotp = async (req, res) => {
 
                   })
                   await newUser.save()
-                  res.redirect('/login');
+                  res.json({status:true})
             } else {
-                  res.json({ err: "otp error" })
+                res.json({status:"invalid"})
             }
 
       } catch (error) {
@@ -500,19 +505,118 @@ const editPost = async (req,res) =>{
 
 const searchProduct = async (req,res) => {
       try{
-            console.log("ivde ndeyy");
+            // console.log("ivde ndeyy");
             const {searchDataValue} = req.body
             console.log(req.body);
             const searchProducts = await Product.find({name:{
                 $regex: searchDataValue , $options: 'i'
             }})
-            console.log(searchProducts);
+            // console.log(searchProducts);
             res.json({status:"searched",searchProducts})
     
         }catch(error){
             console.log(error);
         }
 }
+
+/////////Filter Category////////////
+
+const filterCategory = async(req,res)=>{
+      try{ 
+          const catData = req.query._id
+          console.log('the id is',catData);
+          const filter = req.query.filter
+          console.log('the filter is',filter);
+          const findCat = await Category.findById({_id:catData})
+          console.log('the category is ',findCat);
+  
+          let data= []
+          if(catData &&  filter){
+              if(filter === "pricelowtohighProducts"){
+  
+                   data = await Product.find({category:findCat._id,is_blocked:false}).sort({offerPrice:1})
+  
+              }else if(filter === "pricehightolowProducts"){
+                    data = await Product.find({category:findCat._id,is_blocked:false}).sort({offerPrice:-1})
+              }else if(filter === "nameascendindProducts"){
+                  data = await Product.find({category:findCat._id,is_blocked:false}).sort({name:-1})
+              }else if(filter === "namedescendingProducts"){
+                  data = await Product.find({category:findCat._id,is_blocked:false}).sort({name:1})
+              }
+          }else {
+  
+              data = await Product.find({category:findCat._id,is_blocked:false})
+              console.log("data",data)
+   
+          }
+         console.log('the data is ',data);
+          const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
+          res.render('user/userCategory',{data,products,catData})
+          
+      }catch(err){
+          console.log(err.message)
+      }
+  }
+
+
+  const sortItems = async(req,res)=>{
+      try {
+            const catData = req.query._id
+            const shop = req.query.shop
+             if(shop == "pricetolow"){
+                const data = await Product.find({is_blocked:false}).sort({offerPrice:1})
+                const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
+                res.render('user/userCategory',{data,products,catData})
+    
+             }else if(shop == "pricetohigh"){
+    
+                    const data = await Product.find({is_blocked:false}).sort({offerPrice:-1})
+                    const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
+                    res.render('user/userCategory',{data,products,catData}) 
+    
+             }else if(shop =="atoz"){
+    
+                const data = await Product.find({is_blocked:false}).sort({name:1})
+                const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
+                res.render('user/userCategory',{data,products,catData}) 
+    
+             }else if(shop == "ztoa"){
+    
+                const data = await Product.find({is_blocked:false}).sort({name:-1})
+                const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
+                res.render('user/userCategory',{data,products,catData})  
+             } 
+      } catch (error) {
+            console.log(error);
+      }
+  }
+
+  const resendOtp=async(req,res)=>{
+      try {
+            const otp = generateOTP();
+            console.log(otp)
+            req.session.Data.otp=otp
+
+            const mailoptions = {
+                  from: Email,
+                  to: req.session.Data.email,
+                  subject: "Your otp verification",
+                  text: `your otp ${otp}`,
+            }
+            transport.sendMail(mailoptions, (err) => {
+                  if (err) {
+                        console.log(err.message);
+                  } else {
+                        console.log("Mail send successfully");
+                  }
+            })
+            res.json({status:true})
+
+      } catch (error) {
+            
+      }
+  }
+
 
 
 
@@ -540,7 +644,10 @@ module.exports = {
       userAccount,
       userAccountedit,
       editPost,
-      searchProduct
+      searchProduct,
+      filterCategory,
+      sortItems,
+      resendOtp
 }
 
 

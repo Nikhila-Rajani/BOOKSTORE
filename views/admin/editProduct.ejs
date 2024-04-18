@@ -259,31 +259,7 @@
                     <div class="col-lg-5" style="margin-top: 74px;">
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <h4>Media</h4>
-                                    </div>
-                                    <div class="card-body">
-                                          <div class="input-upload">
-
-                                                <% for( let i = 0 ; i < productDetails.image.length; i++ ) { %>
-                                                      
-                                                      <img src="/uploads/<%= productDetails.image[i] %>" alt="heloo">
-
-
-                                                      <button class="btn btn-sm font-sm rounded btn-brand" id="deletimage" style="background-color: #3F2520; margin-bottom: 60px;"
-                                                onclick="deleteImage('<%= productDetails._id %>' ,'<%= i %>')">Delete</button>
-                                                      <% } %> 
-                                                <label for="Pro_img" class="form-label">Upload Images</label>
-                                                <input class="form-control" onchange="previewImages()" name="image" type="file" id="Pro_img" multiple
-                                                    >
-                                                    
-                                                <div id="imagePreviewContainer" class="image-preview-container"></div>
-                                                <p class="text-danger text-center mb-15 mt-15" id="imageError"></p>
-                                            </div>
-                                           
-                                    </div>
-                                </div> <!-- card end// -->
+                               
                             </div>
                             <div class="col-lg-12">
                                 <div class="card mb-4">
