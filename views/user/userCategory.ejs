@@ -557,10 +557,12 @@
                                     <div class="sort-by-dropdown">
                                         <ul>
                                             <!-- <li><a class="active" href="/">Featured</a></li> -->
-                                            <li><a href="/filter?_id=<%=catData %>&filter=pricelowtohighProducts">Price: Low to High</a></li>
-                                            <li><a href="/filter?_id=<%=catData %>&filter=pricehightolowProducts">Price: High to Low</a></li>
-                                            <li><a href="/filter?_id=<%=catData %>&filter=nameascendindProducts">aA-zZ</a></li>
-                                            <li><a href="/filter?_id=<%=catData %>&filter=namedescendingProducts">zZ-aA</a></li>
+                                            <li class="active"><a href="#">Default sorting</a></li>
+                                            <li><a href="/filter?category=<%= categoryName %>&sort=lowToHigh">Price: Low to High</a></li>
+                                            <li><a href="/filter?category=<%= categoryName %>&sort=highToLow">Price: High to Low</a></li>
+                                            <li><a href="/filter?category=<%= categoryName %>&sort=aA-zZ">aA-zZ</a></li>
+                                            <li><a href="/filter?category=<%= categoryName %>&sort=zZ-aA">zZ-aA</a></li>
+                                            <li><a href="#">Avg. Rating</a></li>
                                            
                                             <!-- <li><a href="#">Avg. Rating</a></li> -->
                                         </ul>
@@ -629,13 +631,13 @@
                         <div class="widget-category mb-30">
                             <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
                             <ul class="categories">
-                                <li><a href="shop-grid-right.html">Shoes & Bags</a></li>
-                                <li><a href="shop-grid-right.html">Blouses & Shirts</a></li>
-                                <li><a href="shop-grid-right.html">Dresses</a></li>
-                                <li><a href="shop-grid-right.html">Swimwear</a></li>
-                                <li><a href="shop-grid-right.html">Beauty</a></li>
-                                <li><a href="shop-grid-right.html">Jewelry & Watch</a></li>
-                                <li><a href="shop-grid-right.html">Accessories</a></li>
+                                <% catData.forEach(category=> { %>
+                                    <div class="category-link">
+                                        <a href="/filter?category=<%= category.name %>">
+                                            <%= category.name %>
+                                        </a>
+                                    </div>
+                                    <% }); %>
                             </ul>
                         </div>
                         <!-- Fillter By Price -->
@@ -729,14 +731,7 @@
                                 </div>
                             </div> -->
                         </div>
-                        <div class="banner-img wow fadeIn mb-45 animated d-lg-block d-none">
-                            <img src="assets/imgs/banner/banner-11.jpg" alt="">
-                            <div class="banner-text">
-                                <span>Women Zone</span>
-                                <h4>Save 17% on <br>Office Dress</h4>
-                                <a href="shop-grid-right.html">Shop Now <i class="fi-rs-arrow-right"></i></a>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

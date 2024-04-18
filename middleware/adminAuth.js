@@ -3,7 +3,7 @@
 const isAdmin = (req,res,next)=>{
       try {
             if(req.session.admin){
-                  next()
+                  next() 
 
             }else{
                   res.redirect("/admin")
@@ -15,4 +15,4 @@ const isAdmin = (req,res,next)=>{
             
       }
 }
-module.exports ={isAdmin} 
+module.exports ={isAdmin}  

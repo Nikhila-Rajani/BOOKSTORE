@@ -50,10 +50,15 @@ const userLogin = async (req, res) => {
 
 const userHome = async (req, res) => {
       try {
-            const ProductData = await Product.find({ is_blocked: false })
+            const categoryName = req.query.category;
+            const ProductData = await Product.find({ is_blocked: false }).limit(9)
             const email = req.session.email
             const catData = await Category.find({is_blocked: false}) 
-            res.render("user/home", { ProductData, email,catData })
+            const newArrival = await Product.find({ is_blocked: false }).sort({ _id: -1 }).limit(6);
+
+            console.log(newArrival[0]);
+
+            res.render("user/home", { ProductData, email,catData ,newArrival})
 
       } catch (error) {
             console.log(error);
@@ -523,35 +528,71 @@ const searchProduct = async (req,res) => {
 
 const filterCategory = async(req,res)=>{
       try{ 
-          const catData = req.query._id
-          console.log('the id is',catData);
-          const filter = req.query.filter
-          console.log('the filter is',filter);
-          const findCat = await Category.findById({_id:catData})
-          console.log('the category is ',findCat);
-  
-          let data= []
-          if(catData &&  filter){
-              if(filter === "pricelowtohighProducts"){
-  
-                   data = await Product.find({category:findCat._id,is_blocked:false}).sort({offerPrice:1})
-  
-              }else if(filter === "pricehightolowProducts"){
-                    data = await Product.find({category:findCat._id,is_blocked:false}).sort({offerPrice:-1})
-              }else if(filter === "nameascendindProducts"){
-                  data = await Product.find({category:findCat._id,is_blocked:false}).sort({name:-1})
-              }else if(filter === "namedescendingProducts"){
-                  data = await Product.find({category:findCat._id,is_blocked:false}).sort({name:1})
+            const cart = req.session.cart;
+            const wish = req.session.wish;
+           
+            const page = req.query.next || 1; 
+            const pre = req.query.pre || 0;
+        
+            let number = 0;
+            if (page != 0) {
+              number = parseInt(page);
+            } else if (pre != 0) {
+              number = parseInt(pre) - 2;
+            }
+            const skip = (number - 1) * 8; 
+        
+            console.log("PAGE", page);
+            console.log("SKIP", skip);
+        
+            const sort = req.query.sort;
+            const categoryName = req.query.category;
+        
+            let data;
+            let totalProducts;
+        
+            if (categoryName) {
+              const category = await Category.findOne({ name: categoryName }).select('_id');
+              if (!category) {
+                return res.status(404).send("Category not found");
               }
-          }else {
-  
-              data = await Product.find({category:findCat._id,is_blocked:false})
-              console.log("data",data)
-   
-          }
-         console.log('the data is ',data);
-          const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
-          res.render('user/userCategory',{data,products,catData})
+        
+              totalProducts = await Product.countDocuments({ category: category._id });
+        
+              if (sort == "lowToHigh") {
+                  data = await Product.find({ category: category._id }).sort({ offerPrice: 1 }).skip(skip).limit(12);
+              } else if (sort == "highToLow") {
+                  data = await Product.find({ category: category._id }).sort({ offerPrice: -1 }).skip(skip).limit(12);
+              } else if (sort == "aA-zZ") {
+                  data = await Product.find({ category: category._id }).sort({ name: 1 }).skip(skip).limit(12);
+              } else if (sort == "zZ-aA") {
+                  data = await Product.find({ category: category._id }).sort({ name: -1 }).skip(skip).limit(12);
+              } else {
+                  data = await Product.find({ category: category._id }).skip(skip).limit(12);
+              }
+            } else {
+              totalProducts = await Product.countDocuments({});
+              
+              if (sort == "lowToHigh") {
+                  data = await Product.find({}).sort({ offerPrice: 1 }).skip(skip).limit(12);
+              } else if (sort == "highToLow") {
+                  data = await Product.find({}).sort({ offerPrice: -1 }).skip(skip).limit(12);
+              } else if (sort == "aA-zZ") {
+                  data = await Product.find({}).sort({ name: 1 }).skip(skip).limit(12);
+              } else if (sort == "zZ-aA") {
+                  data = await Product.find({}).sort({ name: -1 }).skip(skip).limit(12);
+              } else {
+                  data = await Product.find({}).skip(skip).limit(12);
+              }
+            }
+        
+            const catData = await Category.find({});
+            const products = await Product.find({}).sort({ _id: -1 }).limit(3);
+        
+           
+        
+           
+          res.render('user/userCategory',{data,products,catData,categoryName})
           
       }catch(err){
           console.log(err.message)

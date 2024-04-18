@@ -16,6 +16,7 @@ router.post('/register',userController.getUser);
 router.get('/otp',middleware.isLogOut,userController.getOtp);
 router.post('/otp',userController.verifyotp);
 router.get('/logout',userController.logoutUser)
+router.get("/resendOtp",userController.resendOtp)
 
 router.get('/detailedProduct',middleware.isBlocked,userController.detailedProduct)
 router.get('/userProfile',middleware.isLogin,userController.userProfile);
@@ -32,23 +33,23 @@ router.get('/userAccount-edit',middleware.isLogin,userController.userAccountedit
 router.post('/userAccount-edit',middleware.isLogin,userController.editPost);
 
 router.get('/cart',middleware.isLogin,cartController.userCart)
-router.post('/cart',cartController.addtoCart);
-router.post('/increment',cartController.increment);
-router.post('/decrement',cartController.decrement);
-router.delete('/deletecart',cartController.deletecart);
-router.get('/checkoutpage',cartController.checkOut);
+router.post('/cart',middleware.isLogin,cartController.addtoCart);
+router.post('/increment',middleware.isLogin,cartController.increment);
+router.post('/decrement',middleware.isLogin,cartController.decrement);
+router.delete('/deletecart',middleware.isLogin,cartController.deletecart);
+router.get('/checkoutpage',middleware.isLogin,cartController.checkOut);
 
-router.post('/placeOrder',orderController.placeOrder);
-router.get('/ordersuccess',orderController.orderSuccess);
-router.get('/orderDetails',orderController.orderDetails)
-router.get('/viewOrder',orderController.viewOrder);
+router.post('/placeOrder',middleware.isLogin,orderController.placeOrder);
+router.get('/ordersuccess',middleware.isLogin,orderController.orderSuccess);
+router.get('/orderDetails',middleware.isLogin,orderController.orderDetails)
+router.get('/viewOrder',middleware.isLogin,orderController.viewOrder);
 
 router.post('/search',userController.searchProduct)
 
 router.get('/sort',userController.sortItems)
 router.get('/filter',userController.filterCategory);
 router.post('/cancelOrder',orderController.userCancelOrder)
-router.get("/resendOtp",userController.resendOtp)
+
 
 
 

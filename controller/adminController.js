@@ -22,7 +22,11 @@ const verifyAdmin = async (req,res)=>{
             const email = req.body.email;
             const password = req.body.password;
             if(email==adminEmail && password==adminPassword){
+                  req.session.admin = email;
+                  req.session.admin = password;
                   res.redirect('/admin/adminDashboard');
+                 
+                  
             }
             
       } catch (error) {
