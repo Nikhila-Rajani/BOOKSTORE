@@ -44,6 +44,10 @@ const orderSchema = new mongoose.Schema({
         amount:{
             type:Number,
             required:true
+        },
+        productStatus:{
+            type:Boolean,
+            default:false
         }
     }],
    

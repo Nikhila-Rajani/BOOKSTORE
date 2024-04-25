@@ -4,7 +4,8 @@ const Address = require("../model/addressModel");
 const Product = require("../model/ProductModel");
 const Order = require("../model/orderModel");
 const dateGenerator = require('../controller/dateGenerator')
-const {ObjectId} = require('mongodb')
+const {ObjectId} = require('mongodb');
+const { json } = require("express");
 
 
 
@@ -15,7 +16,7 @@ const placeOrder = async (req,res) => {
       const user = req.session.user
       const userData = await User.findOne({_id:user})
       const cartId = req.body.cartId
-      console.log('the cart id is',cartId);
+      // console.log('the cart id is',cartId);
       const paymentMethod = req.body.paymentMethod
       const price = req.body.price
       const addressId = req.body.radiovalue
@@ -60,6 +61,9 @@ const placeOrder = async (req,res) => {
               const deleteCart = await Cart.findByIdAndDelete({_id:cartId})
 
               res.json({status:true})
+      }else if(paymentMethod=="Razorpay"){
+            //console.log(paymentMethod);
+
       }
 } catch (error) {
       console.log(error.message);      
@@ -173,11 +177,41 @@ const adminChangeStatus = async(req,res)=>{
       }
 }
 
+////////////// user Order cancel individual /////////////
+
+const cancelIndividual = async(req,res) => {
+      try {
+            const {productId,orderId,ProductPrice} = req.body
+      const quantity = parseInt(req.body.ProductQuantity)
+     
+      const order = await Order.findOne({_id:orderId});
+      const productCancel = order.products.find(product => product.product.toString()=== productId)
+      productCancel.productStatus =  true
+      order.totalamount -= ProductPrice
+      order.save()
+      const product = await Product.updateOne({_id:productId},{$inc:{stock:quantity}})
+     // console.log("product is here man",product);
+      res.json({status:"ok"});
+
+
+      } catch (error) {
+            console.log(error);
+      }
+      
+
+
+   
+}
+
 module.exports ={
       placeOrder,
       orderSuccess,
       orderDetails,
       viewOrder,
       userCancelOrder,
-      adminChangeStatus
+      adminChangeStatus,
+      cancelIndividual
+      
+      
+
 }

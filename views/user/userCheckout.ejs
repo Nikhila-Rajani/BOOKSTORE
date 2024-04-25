@@ -879,7 +879,7 @@
                                         </div>
                                     </div> -->
                                     <div class="custome-radio">
-                                        <input class="form-check-input" required="" value="Razorpay" type="radio" name="payment_option" id="exampleRadios5" checked="">
+                                        <input class="form-check-input" required="" value="Razorpay" type="radio" name="payment_option" id="exampleRadios5" >
                                         <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Razor Pay</label>
                                         <div class="form-group collapse in" id="paypal">
                                            
@@ -1051,7 +1051,7 @@
             const radiobtn = document.querySelectorAll('.radiobtn')
 
             const paymentMethod = document.querySelector('input[name="payment_option"]:checked').value;
-            console.log(paymentMethod)
+            alert(paymentMethod)
             const totalPrice = document.getElementById('totalprice')
             const price = totalPrice.textContent
             console.log("the price is ",price)
@@ -1066,7 +1066,7 @@
 
               if(radiovalue !== undefined){
                   
-                  if(paymentMethod == "COD"){
+              
                         console.log('its hererererere')
                         $.ajax({
                               url:"/placeOrder",
@@ -1083,7 +1083,7 @@
                                     }
                                 }
                         })
-                  }
+                  
               }
 
             

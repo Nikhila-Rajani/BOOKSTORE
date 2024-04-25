@@ -606,6 +606,7 @@
                                         <th scope="col">Address</th>
                                         <th scope="col">Date</th>
                                         <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
                                         <!-- <th scope="col">Cancel</th> -->
                                     </tr>
                                 </thead>
@@ -622,7 +623,7 @@
                                         <td class="product-des">
                                             <h5 class="product-name"><a href="shop-product-right.html"><%= element.product.name %> </a></h5>
                                         </td>
-                                        <td class="price" data-title="Price"><span><%= element.product.offerPrice %></span></td>
+                                        <td class="price" data-title="Price"><span><%= element.product.offerPrice *  element.stock %> </span></td>
                                         <td class="text-center" data-title="Stock">
                                           <span><%= element.stock %></span>
                                         </td>
@@ -635,6 +636,15 @@
                                         <td class="text-right" data-title="Cart">
                                             <span><%= order.status %></span>
                                         </td>
+                                        <% if (element.productStatus === true) { %>
+                                          <td><span class="badge rounded-pill alert-warning">Cancelled</span></td>
+                                        <% }else{ %>
+                                            <td >
+                                                <a onclick="cancelIndividual('<%= element.product._id %>','<%=order._id %>','<%= element.stock  %>','<%= element.product.offerPrice *  element.stock %>')">Cancel</a>
+                                            </td
+                                       <% } %>
+                                        >
+                                        
                                         
                                     </tr>
                                     <% }) %>
@@ -845,6 +855,35 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 <script>
+
+
+    function cancelIndividual(productId,orderId,ProductQuantity,ProductPrice){
+   
+         $.ajax({
+            url :"/cancelIndividual",
+           method : "post",
+           data :{
+                productId,
+                orderId,
+                ProductQuantity,
+                ProductPrice
+           },
+            success:(response)=>{
+                console.log(response)
+                if(response.status === "ok"){
+                    alert('kk')
+                    window.location.reload()
+                }else{
+                    alert('err in reload')
+                }
+            }
+
+       }) 
+
+    }
+
+
+
       function cancelOrder(id){
 
         Swal.fire({

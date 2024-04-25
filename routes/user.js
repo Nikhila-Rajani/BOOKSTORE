@@ -5,6 +5,7 @@ const middleware = require('../middleware/userAuth')
 const cartController = require('../controller/cartController')
 const orderController = require('../controller/orderControlller')
 const productController = require('../controller/productController')
+const WishListController = require('../controller/wishListController')
 
 
 
@@ -48,7 +49,14 @@ router.post('/search',userController.searchProduct)
 
 router.get('/sort',userController.sortItems)
 router.get('/filter',userController.filterCategory);
-router.post('/cancelOrder',orderController.userCancelOrder)
+router.post('/cancelOrder',orderController.userCancelOrder);
+router.post('/cancelIndividual',orderController.cancelIndividual);
+
+
+router.get('/Wishlist',WishListController.LoadWishlist);
+router.post('/Wishlist',WishListController.addtoWishlist);
+router.post('/deleteWishlist',WishListController.deleteWishlist);
+router.post('/cart',cartController.addtoCart);
 
 
 
