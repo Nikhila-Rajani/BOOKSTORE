@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
+    <title>BOOKWORM</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1044,6 +1044,9 @@
     <!-- Template  JS -->
     <script src="assets/js/maind134.js?v=3.4"></script>
     <script src="assets/js/shopd134.js?v=3.4"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" 
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 <script>
       let radiovalue = 0
@@ -1051,10 +1054,8 @@
             const radiobtn = document.querySelectorAll('.radiobtn')
 
             const paymentMethod = document.querySelector('input[name="payment_option"]:checked').value;
-            alert(paymentMethod)
             const totalPrice = document.getElementById('totalprice')
             const price = totalPrice.textContent
-            console.log("the price is ",price)
 
             radiobtn.forEach(element => {
 
@@ -1067,7 +1068,7 @@
               if(radiovalue !== undefined){
                   
               
-                        console.log('its hererererere')
+                       
                         $.ajax({
                               url:"/placeOrder",
                               method:'post',
@@ -1080,6 +1081,36 @@
                               success: (response) => {
                                     if (response.status === true ) {
                                         window.location.href = '/ordersuccess'
+                                    }else if(response.status === "onlinepayment"){
+                                        const orderDetails = response.orderDetails
+                                        
+                                        var options = {
+                                            "key": "rzp_test_nrHH3zKsb4hiiY",
+                                            "amount": response.razorpayOrder.amount,
+                                            "currency": "INR",
+                                            "name": "BOOKSTORE",
+                                            "description": "Test Transaction",
+                                            "image": "https://example.com/your_logo",
+                                            "order_id": response.razorpayOrder.id, 
+                                            "handler": function (response){
+                                                successGreen(response,orderDetails,cartId)
+                                               
+                                            },
+                                            "prefill": { 
+                                                "name": "Gaurav Kumar", 
+                                                "email": "gaurav.kumar@example.com", 
+                                                "contact": "9000090000"  
+                                            },
+                                            "notes": {
+                                                "address": "Razorpay Corporate Office"
+                                            },
+                                            "theme": {
+                                                "color": "#3399cc"
+                                            }
+                                        };
+                                       console.log(options)
+                                        var rzp1 = new Razorpay(options);
+                                         rzp1.open(); 
                                     }
                                 }
                         })
@@ -1089,6 +1120,27 @@
             
 
       }
+
+
+function successGreen(response,orderDetails,cartId){
+    $.ajax({
+        url : "/razorsuccess",
+        method : "post",
+        data : {
+            response,
+            orderDetails,
+            cartId,
+        },
+        success:(response)=>{
+            if(response.status == "success"){
+                window.location.href="/ordersuccess"
+            }
+        }
+    })
+}
+
+
+
       function edit(id){
         window.location.href ="/editAddress?id="+id
     }

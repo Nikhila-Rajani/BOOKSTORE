@@ -65,8 +65,9 @@ const orderSchema = new mongoose.Schema({
     },
     date:{
         type:String,
-        required:true
+       
     }
 },{versionKey:false,timestamps:true})
 
-module.exports = new mongoose.model('Order',orderSchema)
+const Order = mongoose.model('order',orderSchema)
+module.exports = Order

@@ -5,7 +5,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->
 <head>
     <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
+    <title>BOOKWORM</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,6 +18,113 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
 </head>
+<style>
+    .modal-content{
+        width: 50%; 
+        margin: 10% auto;
+        text-align: center;
+
+    }
+  
+
+ 
+  .modal-content input[type="checkbox"] {
+    float: left;
+    clear: both;
+    margin-top: 0;
+    margin-left: -300px;
+    transform: scale(0.4); 
+  }
+
+  
+    .modal-content button {
+      padding: 10px 20px;
+      font-size: 16px; 
+      margin-left: 220px;
+      margin-right: 222px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background-color: #3F2520;
+      color: aliceblue;
+    }
+
+    .search-result {
+        display: none;
+        position: absolute;
+        height: auto;
+        
+    }
+
+    .no-product-found {
+        position: absolute;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #searchResultsContainer {
+        background-color: rgb(255, 255, 255); 
+        position: absolute;
+        z-index: 1;
+        width: 750px;
+        flex-wrap: wrap;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+       padding-bottom: 2px;
+       
+    }
+
+    .product-container {
+        width: 200px;
+        margin: 10px;
+        text-align: left;
+    }
+
+    .product-container img {
+        margin-left: -2px;
+        max-width: 20%;
+        height: auto;
+        transform: rotate(0deg);
+        transition: transform 0.5s ease; 
+
+       
+    }
+
+    .product-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -50px;
+       
+    }
+
+    .product-info p {
+        margin: -5px 0;
+        font-size: 12px;
+        font-weight:bolder;
+        margin-top: -1px;
+        color: black;
+    }
+
+  
+    .rotate-90 {
+        transform: rotate(90deg);
+    }
+
+    .rotate-180 {
+        transform: rotate(180deg);
+    }
+
+    .rotate-270 {
+        transform: rotate(270deg);
+    }
+
+   
+  </style>
 
 <body>
     <header class="header-area header-style-1 header-height-2">
@@ -660,12 +767,37 @@
                                           class="btn  mr-10 mb-sm-15"><i class="fi-rs-cross mr-10"></i>Back
                                           </button></a>
                                           <a class="btn " href="/"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
-                              <% }else{%>
+
+
+                                <% } else if (order.status === 'Delivered') { %>
+                                    <button onclick="openReturnModal(`<%= order._id %>`)"
+                                        class="btn  mr-10 mb-sm-15"><i class="fi-rs-cross mr-10"></i>Return
+                                        Order</button>
+                                    <a class="btn " href="/"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+
+                                    <div id="returnModal" class="modal">
+                           
+                                    <div class="modal-content">
+                                      <span class="close" onclick="closeReturnModal()">&times;</span>
+                                      <h5>Select reason for return:</h5>
+                                      <p id="errormessage" class="text-danger"></p>
+                                      <input type="checkbox" id="reasonIncorrectItem" name="returnReason" value="Incorrect Item">
+                                      <label for="reasonIncorrectItem">Incorrect Item</label><br>
+                                      <input type="checkbox" id="reasonItemDamaged" name="returnReason" value="Item Damaged">
+                                      <label for="reasonItemDamaged">Item Damaged</label><br>
+                                      <input type="checkbox" id="reasonSizeFitIssue" name="returnReason" value="Size/Fit Issue">
+                                      <label for="reasonSizeFitIssue">Size/Fit Issue</label><br>
+                                      
+                                      <button onclick="submitReturn('<%= order._id %>')">Submit</button>
+                                    </div>
+                                           
+                              <% }else {%>
                               <button onclick="cancelOrder(`<%= order._id %>`)"
                                     class="btn  mr-10 mb-sm-15"><i class="fi-rs-cross mr-10"></i>Cancel
                                     Order</button>
                             <a class="btn " href="/"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
                             <%} %>
+                            
                         </div>
                        
                         <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
@@ -919,12 +1051,76 @@
 
             }
           });
-          
+        
+        }
 
-            
+
+        function openReturnModal(id){
+            const modal = document.getElementById('returnModal');
+            modal.style.display = "block";
+        }
+
+        function closeReturnModal(){
+            const modal = document.getElementById('returnModal');
+            modal.style.display = "none";
+        }
+        function submitReturn(id){
+            const selectResons = document.querySelectorAll('input[name="returnReason"]:checked');
+            if(selectResons.length === 0){
+                document.getElementById('errormessage').textContent = "Please select atleast one reason"
+                return;
+            }else{
+                document.getElementById('errormessage').textContent = ""
+            }
+           
+        
+            const reasons = [];
+            selectResons.forEach(reason => {
+                reasons.push(reason.value);
+            });
+            $.ajax({
+                url: "/returnOrder",
+                method: "post",
+                data:{
+                    id : id,
+                    reasons : reasons
+                },
+                success:(response)=>{
+                    if(response.status == "return"){
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "bottom",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                            });
+                            Toast.fire({
+                            icon: "success",
+                            title: "Request sent successfully"
+                            });
+                            closeReturnModal();
+                            setTimeout(() => {
+                                window.location.href = '/orderDetails';
+                               
+                            }, 3000);
+                    }
+                    
+                }
+            })
 
         }
-      
+        const returnReasonCheckboxes = document.querySelectorAll('input[name="returnReason"]');
+        returnReasonCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+        document.getElementById('errormessage').textContent = ""
+    });
+});
+
+
 </script>
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->

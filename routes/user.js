@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express();
-const userController = require('../controller/userController')
-const middleware = require('../middleware/userAuth')
-const cartController = require('../controller/cartController')
-const orderController = require('../controller/orderControlller')
-const productController = require('../controller/productController')
-const WishListController = require('../controller/wishListController')
+const userController = require('../controller/userController');
+const middleware = require('../middleware/userAuth');
+const cartController = require('../controller/cartController');
+const orderController = require('../controller/orderControlller');
+const productController = require('../controller/productController');
+const WishListController = require('../controller/wishListController');
+const walletController = require('../controller/walletController');
 
 
 
@@ -51,12 +52,19 @@ router.get('/sort',userController.sortItems)
 router.get('/filter',userController.filterCategory);
 router.post('/cancelOrder',orderController.userCancelOrder);
 router.post('/cancelIndividual',orderController.cancelIndividual);
+router.post('/razorsuccess',orderController.razorpaySuccess);
+router.post('/returnOrder',orderController.returnOrder);
 
 
 router.get('/Wishlist',WishListController.LoadWishlist);
 router.post('/Wishlist',WishListController.addtoWishlist);
 router.post('/deleteWishlist',WishListController.deleteWishlist);
 router.post('/cart',cartController.addtoCart);
+
+
+router.get('/userWallet',walletController.LoadWallet)
+
+
 
 
 

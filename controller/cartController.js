@@ -13,7 +13,7 @@ const userCart = async(req,res)=>{
             const findUser = req.session.user;
             const findCart = await Cart.findOne({user:findUser._id}).populate('products.productId')
 
-            console.log("ok kitti",findCart);
+            //console.log("ok kitti",findCart);
             res.render('user/userCart',{findCart})
 
       }catch(err){
@@ -104,7 +104,7 @@ const addtoCart = async(req,res)=>{
                               if(element.quantity <10){
                                     element.quantity += 1
                                     findCart.total += price
-                                    console.log(findCart.total);
+                                    //console.log(findCart.total);
                                     res.json({status:"increment"})
 
                               }else{
@@ -131,7 +131,7 @@ const addtoCart = async(req,res)=>{
 
  const decrement = async(req,res)=>{
       try {
-            console.log("decremntil und tto");
+            //console.log("decremntil und tto");
             const user = req.session.user;
 
             const {id} = req.body;
@@ -169,7 +169,7 @@ const addtoCart = async(req,res)=>{
 
 const deletecart = async (req,res)=>{
       try {
-            console.log("ivida unde");
+            //console.log("ivida unde");
             const userId = req.session.user
             const {id,quantity} = req.body
             const findCart = await Cart.findOne({user:userId,'products.productId':id})
@@ -184,7 +184,7 @@ const deletecart = async (req,res)=>{
                        $inc:{total: -totalDecerement}
                    }
                )
-               console.log('delete item from cart',deleteItem)
+              //console.log('delete item from cart',deleteItem)
                res.json({status:"delete"})
             }else{
                   console.log('err.me');
@@ -203,7 +203,7 @@ const deletecart = async (req,res)=>{
             const userId = req.session.user
             const findAddress = await Address.find({user:userId})
             const userCart = await Cart.findOne({user:userId}).populate('products.productId')
-            console.log("the uiser cart is",userCart);
+            //console.log("the uiser cart is",userCart);
             res.render("user/userCheckout",{findAddress,userCart})
             
       } catch (error) {
