@@ -792,7 +792,7 @@
                                     </div>
                                            
                               <% }else {%>
-                              <button onclick="cancelOrder(`<%= order._id %>`)"
+                              <button onclick="cancelOrder('<%= order._id %>','<%= order.paymentMethod %>','<%= order.user %>')"
                                     class="btn  mr-10 mb-sm-15"><i class="fi-rs-cross mr-10"></i>Cancel
                                     Order</button>
                             <a class="btn " href="/"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
@@ -998,7 +998,8 @@
                 productId,
                 orderId,
                 ProductQuantity,
-                ProductPrice
+                ProductPrice,
+               
            },
             success:(response)=>{
                 console.log(response)
@@ -1016,8 +1017,8 @@
 
 
 
-      function cancelOrder(id){
-
+      function cancelOrder(id,paymentMethod,user){
+       
         Swal.fire({
             title: 'Are you sure?',
             text: 'Do you want to cancel this order?',
@@ -1040,7 +1041,9 @@
                   url: "/cancelOrder",
                   method: "post",
                   data :{
-                        id
+                        id,
+                        paymentMethod,
+                        user
                   },
                   success: (response) => {
                         if (response.status == true ) {

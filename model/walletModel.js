@@ -9,7 +9,7 @@ const walletSchema = new mongoose.Schema({
           default:0
       },
       transactions:[{
-          id:{
+          transactionid:{
               type:String,
   
           },

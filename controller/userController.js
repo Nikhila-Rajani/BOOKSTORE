@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const Product = require('../model/ProductModel');
 const Address = require('../model/addressModel');
 const Cart = require('../model/cartModel');
+const Wallet = require('../model/walletModel')
 const Category = require('../model/CategoryModel');
 
 const Email = process.env.Email;
@@ -159,6 +160,11 @@ const verifyotp = async (req, res) => {
 
                   })
                   await newUser.save()
+                  const newWallet = new Wallet({
+                        user:newUser._id
+                  })
+                  await newWallet.save()
+                  console.log("this is created Wallet",newWallet)
                   res.json({status:true})
             } else {
                 res.json({status:"invalid"})

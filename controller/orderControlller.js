@@ -6,7 +6,8 @@ const Order = require("../model/orderModel");
 const dateGenerator = require('../controller/dateGenerator');
 const orderId = require('../controller/otpGenerate');
 const Razorpay = require('razorpay');
-const crypto = require('crypto')
+const crypto = require('crypto');
+const Wallet = require('../model/walletModel');
 
 
 const {keyId , keySecret} = process.env
@@ -151,7 +152,7 @@ const viewOrder = async (req,res) => {
             const id = req.query.id
             // console.log("iddddd",id);
             const order = await Order.findOne({_id:id}).populate('products.product')
-            console.log("oderrrr",order);
+         
             res.render('user/viewOrder',{order})
       } catch (error) {
             console.log(error.message);
@@ -160,12 +161,18 @@ const viewOrder = async (req,res) => {
 
 const userCancelOrder = async (req,res) => {
       try {
-            //console.log('its heree');
-            const id = req.body.id;
-            //console.log('the id is ',id);
-            const orders =  await Order.find({})
-            //console.log(orders);
-            const user = req.session.user;
+
+            const {id,paymentMethod,user} = req.body;
+            const  userId = req.session.user
+            const transactionid = orderId()
+            const orders =  await Order.findOne({_id:id})
+            if(paymentMethod === "Razorpay"){
+                 const userWallet = await Wallet.findOneAndUpdate({user:userId},{$inc:{
+                  walletAmount:orders.totalamount
+                 },$push:{transactions:{transactionid:transactionid,amount:orders.totalamount,status:'credit',walletremarks:'cancel order'}}}) 
+                 console.log('the has been credited in wallet',userWallet)
+            }
+
             const order = await Order.findByIdAndUpdate({_id:id},
                   {$set:{status:"Cancelled"}}
             )
@@ -231,7 +238,7 @@ const adminChangeStatus = async(req,res)=>{
 
 const cancelIndividual = async(req,res) => {
       try {
-            const {productId,orderId,ProductPrice} = req.body
+            const {productId,orderId,ProductPrice,paymentMethod} = req.body
       const quantity = parseInt(req.body.ProductQuantity)
      
       const order = await Order.findOne({_id:orderId});

@@ -337,7 +337,7 @@
                                                 <h5 class="mb-0 "style="text-align: center;">WALLET</h5>
                                             </div>
                                             <div class="card-body">
-                                              <h6>AMOUNT:</h6>
+                                              <h6>AMOUNT:<%= findWallet.walletAmount %></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -367,15 +367,17 @@
                                                     
                                                       
                                                          
-                                                        
+                                                        <% findWallet.transactions.forEach(element => { %>
+                                                         
+                                                      
                                                         <tr>
-                                                            <td>j</td>
-                                                            <td>l</td>
-                                                            <td>j</td>
-                                                            <td>d</td>
-                                                            <td>h</td>
+                                                            <td><%= new Date(element.date).toLocaleDateString() %></td>
+                                                            <td><%= element.transactionid %></td>
+                                                            <td><%= element.amount %></td>
+                                                            <td><%= element.status %></td>
+                                                            <td><%= element.walletremarks %></td>
                                                         </tr>
-                                                        
+                                                        <% }) %>
                                                     </tbody>
                                                 </table>
                                             </div>
