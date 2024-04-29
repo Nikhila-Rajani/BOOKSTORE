@@ -25,6 +25,42 @@
            margin-left: 40pxpx; 
           padding-right: 20px;
       }
+      .coupon-dropdown {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        width: 30%;
+        z-index: 5;
+        overflow: scroll;
+    }
+    .coupon-dropdown::-webkit-scrollbar {
+      width: 0;
+    }
+    
+    .coupon-dropdown ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .coupon-dropdown ul li {
+        margin-bottom: 5px;
+    }
+    
+    .coupon-code-btn {
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+    .copy-icon {
+        cursor: pointer;
+        margin-left: 5px;
+    }
+    
+    .copy-icon i {
+        color: #007bff; 
+    }
   </style>
 <body>
     <header class="header-area header-style-1 header-height-2">
@@ -736,6 +772,38 @@
                         </div>
                     </div> -->
                     <div class="col-lg-6">
+                        <a href="#" id="couponDropdownToggle">Click here for coupon</a>
+                        <div id="couponDropdown" class="coupon-dropdown" >
+                                        
+                            <ul style="display: flex; width: 300px; ">
+                             
+                                    <div class="col-lg-6">
+                                        <div class="card mb-3 mb-lg-0">
+                                            <div class="card-header" style="background-color: #3F2520;">
+                                                <h5 class="mb-0" style="color: aliceblue;">kk</h5>
+                                            </div>
+                                         
+                                                 
+                                                    <div class="card-body" style="background-color: #ffffff; border :1px solid #3F2520 ; margin-top: 5px; " >
+                                                        <address>
+                                                          
+                                                           <br><h6>Discount : %</h6>
+                                                           <input type="hidden" id="couponcode">
+                                                           <br><li><span class="coupon-code" style="color: black; " onclick="copyCouponCode('')">Coupon code:   </span></li>
+                                                            <br><h6>MInimum Purchase :</h6>
+                                                          
+                                                        </address>
+                                                 
+                                                      
+                                                    </div>
+                                               
+                                           
+                                        </div>
+                                    </div>
+                                 
+                          
+                                </ul>
+                        </div>
                         <div class="toggle_info">
                             <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
                         </div>
@@ -1144,6 +1212,39 @@ function successGreen(response,orderDetails,cartId){
       function edit(id){
         window.location.href ="/editAddress?id="+id
     }
+
+
+
+    document.getElementById("couponDropdownToggle").addEventListener("click", function() {
+        document.getElementById("couponDropdown").style.display = "block";
+    });
+    
+    function copyCouponCode(code) {
+        navigator.clipboard.writeText(code).then(function() {
+            const Toast = Swal.mixin({
+                    toast: true,
+                    position: "bottom",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                    });
+                    Toast.fire({
+                    icon: "success",
+                    title: "Coupon copied to clipboard",
+                    color: 'black',
+                    iconColor:'#3F2520'
+                    })
+                   
+            document.getElementById("couponDropdown").style.display = "none"; 
+        }, function(err) {
+            console.error('Failed to copy text: ', err);
+        });
+    }
+    
       
 </script>
 
