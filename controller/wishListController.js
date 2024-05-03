@@ -2,7 +2,7 @@ const User = require ('../model/userModel');
 const Product = require ('../model/ProductModel');
 const Cart = require ('../model/cartModel');
 const Wishlist  = require ('../model/wishListModel');
-const session = require("express-session");
+
 
 
 
@@ -11,11 +11,7 @@ const session = require("express-session");
 const LoadWishlist = async (req,res) => {
       try {
             const findUser = req.session.user;
-           //console.log("user iss",findUser);
            const findWishlist = await Wishlist.findOne({user:findUser._id}).populate('products.productId');
-          // console.log("The wish list hereee....",findWishlist);
-            
-
            res.render('user/WishList',{findWishlist}) 
       } catch (error) {
             console.log(error);

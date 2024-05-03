@@ -7,6 +7,7 @@ const orderController = require('../controller/orderControlller');
 const productController = require('../controller/productController');
 const WishListController = require('../controller/wishListController');
 const walletController = require('../controller/walletController');
+const couponController = require('../controller/couponController');
 
 
 
@@ -62,8 +63,10 @@ router.post('/deleteWishlist',WishListController.deleteWishlist);
 router.post('/cart',cartController.addtoCart);
 
 
-router.get('/userWallet',walletController.LoadWallet)
+router.get('/userWallet',walletController.LoadWallet);
 
+router.get('/userCoupon',couponController.userCouponGet);
+router.post('/ApplyCoupon',couponController.userApplyCoupon)
 
 
 

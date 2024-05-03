@@ -3,6 +3,7 @@ const User = require("../model/userModel");
 const Address = require("../model/addressModel");
 const Product = require("../model/ProductModel");
 const session = require("express-session");
+const Coupon = require("../model/couponModel");
 
 
 /////load cart page /////
@@ -203,8 +204,8 @@ const deletecart = async (req,res)=>{
             const userId = req.session.user
             const findAddress = await Address.find({user:userId})
             const userCart = await Cart.findOne({user:userId}).populate('products.productId')
-            //console.log("the uiser cart is",userCart);
-            res.render("user/userCheckout",{findAddress,userCart})
+            const coupon = await Coupon.find({isblocked:false});
+            res.render("user/userCheckout",{findAddress,userCart,coupon})
             
       } catch (error) {
             console.log(error);

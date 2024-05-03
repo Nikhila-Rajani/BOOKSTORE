@@ -106,6 +106,70 @@ const deleteCoupon = async (req,res) => {
       }
 }
 
+///////// User Coupon page Get ////////////
+
+const userCouponGet = async (req,res) => {
+      try {
+            const coupon = await Coupon.find({isblocked:false})
+            res.render('user/userCoupon',{coupon})
+      } catch (error) {
+            console.log(error.message);
+      }
+}
+
+////// Applying Coupon ////////
+
+const userApplyCoupon = async (req,res) => {
+      try {
+            console.log("hello")
+            const{id,coupon} = req.body;
+            console.log(id,  coupon);
+            const email = req.session.email;
+            const user=await User.findOne({email:email})
+            console.log(user)
+            const findCart = await Cart.findOne({_id:id});
+            const findCoupon = await Coupon.findOne({code:coupon,isblocked:false});
+            if(findCoupon){
+                  console.log("findcoupon")
+                  let userinuser=false
+                  for(let i=0;i<findCoupon.user.length;i++){
+                        if(findCoupon.user[i]===user._id){
+                              userinuser=true
+                              break;
+                        }
+                  }
+                  console.log(userinuser)
+                  if(userinuser){
+                        res.json({status:"Applied"})
+                  }else{
+                        if(findCart.total > findCoupon.minimumpurchase){
+                              console.log("amont true")
+                              let totalAmount = findCart.total;
+                              console.log(totalAmount)
+                              let Percentage = findCoupon.percentage;
+                              console.log(Percentage)
+                              let offAmount = (totalAmount * Percentage)/100;
+                              console.log(offAmount)
+                              let dicountTotal = Math.ceil(totalAmount - offAmount);
+                              console.log(dicountTotal)
+
+                              res.json({status:"UserApplied",dicountTotal,offAmount});
+
+                        }else{
+                              console.log("else ")
+                              res.json({status:"notreachPurchaseAmount"});
+                        }
+                  }
+            }else{
+                  res.json({ststus:"couponBlocked"});
+            }
+          
+           
+      } catch (error) {
+          console.log(error);  
+      }
+}
+
 
 module.exports = {
       loadAddcoupon,
@@ -113,5 +177,7 @@ module.exports = {
       allCouponGet,
       blockCoupon,
       unblockCoupon,
-      deleteCoupon
+      deleteCoupon,
+      userCouponGet,
+      userApplyCoupon
 }

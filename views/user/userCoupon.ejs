@@ -17,6 +17,67 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
+  <style>
+  
+        
+        
+        .card{
+        
+            width: 250px;
+            border:none;
+            height: 320px;
+            border-radius: 15px;
+            padding: 20px;
+            background-color: #D50000;
+        }
+        
+        .percent{
+        
+            font-size: 56px;
+            color: #fff;
+        }
+        
+        .discount{
+        
+            font-size: 27px;
+            color: #fff;
+        }
+        
+        
+        .line{
+        
+            color: #fff;
+        }
+        
+        
+        
+        .form-check-input:checked {
+            background-color: #F44336;
+            border-color: #F44336;
+        }
+        
+        
+        .form-check-input:focus {
+            border-color: #d50000;
+            outline: 0;
+            box-shadow: none;
+        }
+        
+        
+        .form-check {
+            display: block;
+            min-height: 1.5rem;
+            padding-left: 1.75em;
+            margin-bottom: -5px;
+        }
+
+        .mycoupon{
+            margin-top: -65px;
+            margin-bottom: 45px;
+            display: flex;
+            justify-content: center;
+        }
+  </style>
 </head>
 
 <body>
@@ -298,13 +359,18 @@
         <section class="pt-150 pb-150">
             <div class="container">
                 <div class="row">
+                  <div class="mycoupon" >
+
+                        <h2>MY COUPONS</h2>
+                  </div>
+
                     <div class="col-lg-10 m-auto">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="dashboard-menu">
                                     <ul class="nav flex-column" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="dashboard-tab"  href="/userProfile"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                            <a class="nav-link " id="dashboard-tab"  href="/userProfile"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="orders-tab"  href="/orderDetails" role="tab" ><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
@@ -322,7 +388,7 @@
                                             <a class="nav-link" id="account-detail-tab"  href="/userWallet"><i class="fi-rs-smartphone mr-10"></i>Wallet</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="account-detail-tab"  href="/userCoupon"><i class="fi-rs-smartphone mr-10"></i>Coupons</a>
+                                            <a class="nav-link active" id="account-detail-tab"  href="/userCoupon"><i class="fi-rs-smartphone mr-10"></i>Coupons</a>
                                         </li>
                                         
                                                 <li class="nav-item">
@@ -332,19 +398,45 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <div class="tab-content dashboard-content">
-                                    <div class="tab-pane fade active show" id="dashboard" >
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5 class="mb-0">Hello <%= findUser.username %></h5>
+
+                            
+                            <div class="col-md-3"  style="width: 725px; display:flex;">
+                                   
+
+                                <div class="tab-content dashboard-content" style=" width: 18rem;">
+                                    <div class="tab-pane fade active show" id="dashboard" style="display:flex;">
+                                       
+                                          <% coupon.forEach(element => { %>
+                                          <div class="card">
+                                                <div class="text-center">
+                                                    <div class="d-flex flex-row text-center">
+                                                        <img src="https://i.imgur.com/bIgSEvT.png" width="70">
+                                                        <div class="d-flex flex-column ml-1">
+                                                            <h1 class="mb-0 percent"><%= element.percentage%>%</h1>
+                                                            <span class="discount">Discount</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr class="line">
+                                                <span class="text-white" style="font-size: large;"><%= element.name %></span>
+                                                <div class="d-flex justify-content-between align-items-center mt-4">
+                                                    <span class="text-white">Active</span>
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                                                    </div>
+                                                </div>
+                                                <!-- Coupon Code Box with Clipboard Copy Button -->
+                                                <div class="input-group mt-1" >
+                                                    <input type="text" class="form-control" id="couponCodeInput"  value="<%= element.code %>" readonly>
+                                                    <button class="btn" onclick="copyCouponCode()">Copy</button>
+                                                </div>
                                             </div>
-                                            <div class="card-body">
-                                                <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">edit your password and account details.</a></p>
+                                            
                                             </div>
                                         </div>
+                                        <% }) %>
                                     </div>
-
+                                    
                                    
                                    
                                    
@@ -506,27 +598,15 @@
     <!-- Template  JS -->
     <script src="assets/js/maind134.js?v=3.4"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const logoutLink = document.querySelector('.logout-link');
-            
-            logoutLink.addEventListener('click', function(event) {
-                event.preventDefault();
-                Swal.fire({
-                    title: 'Logout Confirmation',
-                    text: 'Are you sure you want to logout?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Logout'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/logout'; 
-                    }
-                });
-            });
-        });
+      function copyCouponCode() {
+            const couponCodeInput = document.getElementById('couponCodeInput');
+            couponCodeInput.select();
+            document.execCommand('copy');
+            alert('Coupon code copied to clipboard!');
+        }
+        
     </script>
+
 </body>
 
 
