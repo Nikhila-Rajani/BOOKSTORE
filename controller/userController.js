@@ -7,6 +7,9 @@ const Address = require('../model/addressModel');
 const Cart = require('../model/cartModel');
 const Wallet = require('../model/walletModel')
 const Category = require('../model/CategoryModel');
+const offer = require('../model/offerModel');
+const Offer = require('../model/offerModel');
+
 
 const Email = process.env.Email;
 const Password = process.env.Password;
@@ -20,8 +23,8 @@ const transport = nodemailer.createTransport({
             user: Email,
             pass: Password,
       },
-      tls:{
-            rejectUnauthorized:false
+      tls: {
+            rejectUnauthorized: false
       }
 })
 
@@ -54,12 +57,12 @@ const userHome = async (req, res) => {
             const categoryName = req.query.category;
             const ProductData = await Product.find({ is_blocked: false }).limit(9)
             const email = req.session.email
-            const catData = await Category.find({is_blocked: false}) 
+            const catData = await Category.find({ is_blocked: false })
             const newArrival = await Product.find({ is_blocked: false }).sort({ _id: -1 }).limit(6);
 
             console.log(newArrival[0]);
 
-            res.render("user/home", { ProductData, email,catData ,newArrival})
+            res.render("user/home", { ProductData, email, catData, newArrival })
 
       } catch (error) {
             console.log(error);
@@ -81,51 +84,50 @@ const getUser = async (req, res) => {
 
             const { username, email, mobile, password, conpassword } = req.body
 
-            const existingUser = await User.findOne({email:email})
-            if(existingUser){
-                res.render('user/register',{message:'user is exist'})  
-                console.log('existing user');  
-            }else{
+            const existingUser = await User.findOne({ email: email })
+            if (existingUser) {
+                  res.render('user/register', { message: 'user is exist' })
+                  console.log('existing user');
+            } else {
 
-            
-            const otp = generateOTP();
-            console.log("otp is :", otp);
-
-
-            const newUser = {
-                  username,
-                  email,
-                  mobile,
-                  password,
-                  conpassword,
-                  otp
-
-            }
-
-            req.session.Data = req.session.Data || {};
+                  const otp = generateOTP();
+                  console.log("otp is :", otp);
 
 
-            Object.assign(req.session.Data, newUser)
-            req.session.save();
+                  const newUser = {
+                        username,
+                        email,
+                        mobile,
+                        password,
+                        conpassword,
+                        otp
 
-            const mailoptions = {
-                  from: Email,
-                  to: email,
-                  subject: "Your otp verification",
-                  text: `your otp ${otp}`,
-            }
-            transport.sendMail(mailoptions, (err) => {
-                  if (err) {
-                        console.log(err.message);
-                  } else {
-                        console.log("Mail send successfully");
                   }
-            })
 
-            console.log("User added successfully");
-            res.redirect("/otp")
+                  req.session.Data = req.session.Data || {};
 
-      }
+
+                  Object.assign(req.session.Data, newUser)
+                  req.session.save();
+
+                  const mailoptions = {
+                        from: Email,
+                        to: email,
+                        subject: "Your otp verification",
+                        text: `your otp ${otp}`,
+                  }
+                  transport.sendMail(mailoptions, (err) => {
+                        if (err) {
+                              console.log(err.message);
+                        } else {
+                              console.log("Mail send successfully");
+                        }
+                  })
+
+                  console.log("User added successfully");
+                  res.redirect("/otp")
+
+            }
 
       } catch (error) {
             console.log(error);
@@ -147,7 +149,7 @@ const getOtp = async (req, res) => {
 }
 const verifyotp = async (req, res) => {
       try {
-           console.log("verify")
+            console.log("verify")
             if (req.session.Data.otp == req.body.otp) {
                   console.log('stored otp :', req.session.Data.otp)
                   console.log('from body', req.body.otp);
@@ -161,13 +163,13 @@ const verifyotp = async (req, res) => {
                   })
                   await newUser.save()
                   const newWallet = new Wallet({
-                        user:newUser._id
+                        user: newUser._id
                   })
                   await newWallet.save()
-                  console.log("this is created Wallet",newWallet)
-                  res.json({status:true})
+                  console.log("this is created Wallet", newWallet)
+                  res.json({ status: true })
             } else {
-                res.json({status:"invalid"})
+                  res.json({ status: "invalid" })
             }
 
       } catch (error) {
@@ -179,24 +181,24 @@ const verifyLogin = async (req, res) => {
       try {
             const { email, password } = req.body
             const findUser = await User.findOne({ email: email });
-            console.log('found',findUser)
+            console.log('found', findUser)
             if (findUser) {
-                  const passwordMatch = await bcrypt.compare(password,findUser.password)
-                  console.log('password',passwordMatch);
-                  if(passwordMatch){
+                  const passwordMatch = await bcrypt.compare(password, findUser.password)
+                  console.log('password', passwordMatch);
+                  if (passwordMatch) {
                         if (findUser.is_blocked) {
                               console.log('user has been blocked')
-                          } else {
+                        } else {
                               req.session.user = findUser
                               req.session.email = email
-                            
+
                               res.redirect('/');
                         }
-                  }else{
+                  } else {
                         console.log('password not watch')
                         res.render('user/login', { passErr: "Incorrect password try again" });
                   }
-                
+
             } else {
 
                   res.render('user/login', { emailErr: "Incorrect email  please try again " });
@@ -208,21 +210,24 @@ const verifyLogin = async (req, res) => {
       }
 }
 /////load detailed product////
+
 const detailedProduct = async (req, res) => {
       try {
             const id = req.query.id
             const user = req.session.user
-           const cartFind = await Cart.findOne({user:user,"products.productId":id})
-            const proData = await Product.findById({ _id: id })
+            const cartFind = await Cart.findOne({ user: user, "products.productId": id })
 
+            const proData = await Product.findById({ _id: id }).populate('category')
+            const category = await Category.find({})
+            const offer = await Offer.findOne({ category: proData.category._id })
             let cartStatus
-            if(cartFind){
-              cartStatus=true;
-            }else{
-              cartStatus=false;
+            if (cartFind) {
+                  cartStatus = true;
+            } else {
+                  cartStatus = false;
             }
-           
-            res.render("user/detailedProduct", { proData ,cartStatus});
+
+            res.render("user/detailedProduct", { proData, cartStatus, offer });
 
       } catch (error) {
             console.log(error);
@@ -270,7 +275,7 @@ const getAddress = async (req, res) => {
       try {
             const findUser = await User.findOne({ email: req.session.email });
             const findAddress = await Address.find({ user: findUser._id })
-           
+
             res.render('user/userAddress', { findUser, findAddress });
 
       } catch (error) {
@@ -353,7 +358,7 @@ const postedit = async (req, res) => {
             const id = req.query.id;
             console.log(id);
             const { name, mobile, pincode, locality, address, city, state, country, addresstype } = req.body
-           
+
             const updateAddress = await Address.findByIdAndUpdate({ _id: id }, {
                   $set: {
                         name: name,
@@ -470,179 +475,183 @@ const userAccount = async (req, res) => {
 
 //////////Account details editing////
 
-const userAccountedit =async (req,res) => {
+const userAccountedit = async (req, res) => {
       try {
-       const  userId = req.query._id
-       const findUser = await User.findOne({_id:userId})
-    
-      res.render('user/useraccountEdit',{findUser})
+            const userId = req.query._id
+            const findUser = await User.findOne({ _id: userId })
 
-            
+            res.render('user/useraccountEdit', { findUser })
+
+
       } catch (error) {
             console.log(error);
-            
+
       }
 }
 
-console.log('heloo'+ 1)
+console.log('heloo' + 1)
 ///////////Saving edited data bu accepting from body//////
 
-const editPost = async (req,res) =>{
+const editPost = async (req, res) => {
       try {
-            const {name,email,mobile}= req.body
+            const { name, email, mobile } = req.body
             const userData = req.session.email;
-            if(userData){
-                  const updateData = await User.findOneAndUpdate({email:userData},{$set:{
-                        username:name,
-                        email:email,
-                        mobile:mobile
-      
-                  }})
-                  console.log('updated===>>>',updateData);
+            if (userData) {
+                  const updateData = await User.findOneAndUpdate({ email: userData }, {
+                        $set: {
+                              username: name,
+                              email: email,
+                              mobile: mobile
+
+                        }
+                  })
+                  console.log('updated===>>>', updateData);
                   await updateData.save()
-                  res.json({status:'updated'})
-            }else{
+                  res.json({ status: 'updated' })
+            } else {
                   console.log('cannot find')
             }
-          
-            
+
+
       } catch (error) {
             console.log(error);
-            
+
       }
 }
 
 /////////// Search product///////
 
-const searchProduct = async (req,res) => {
-      try{
+const searchProduct = async (req, res) => {
+      try {
             // console.log("ivde ndeyy");
-            const {searchDataValue} = req.body
+            const { searchDataValue } = req.body
             console.log(req.body);
-            const searchProducts = await Product.find({name:{
-                $regex: searchDataValue , $options: 'i'
-            }})
+            const searchProducts = await Product.find({
+                  name: {
+                        $regex: searchDataValue, $options: 'i'
+                  }
+            })
             // console.log(searchProducts);
-            res.json({status:"searched",searchProducts})
-    
-        }catch(error){
+            res.json({ status: "searched", searchProducts })
+
+      } catch (error) {
             console.log(error);
-        }
+      }
 }
 
 /////////Filter Category////////////
 
-const filterCategory = async(req,res)=>{
-      try{ 
+const filterCategory = async (req, res) => {
+      try {
             const cart = req.session.cart;
             const wish = req.session.wish;
-           
-            const page = req.query.next || 1; 
+
+            const page = req.query.next || 1;
             const pre = req.query.pre || 0;
-        
+
             let number = 0;
             if (page != 0) {
-              number = parseInt(page);
+                  number = parseInt(page);
             } else if (pre != 0) {
-              number = parseInt(pre) - 2;
+                  number = parseInt(pre) - 2;
             }
-            const skip = (number - 1) * 8; 
-        
+            const skip = (number - 1) * 8;
+
             console.log("PAGE", page);
             console.log("SKIP", skip);
-        
+
             const sort = req.query.sort;
             const categoryName = req.query.category;
-        
+
             let data;
             let totalProducts;
-        
+
             if (categoryName) {
-              const category = await Category.findOne({ name: categoryName }).select('_id');
-              if (!category) {
-                return res.status(404).send("Category not found");
-              }
-        
-              totalProducts = await Product.countDocuments({ category: category._id });
-        
-              if (sort == "lowToHigh") {
-                  data = await Product.find({ category: category._id }).sort({ offerPrice: 1 }).skip(skip).limit(12);
-              } else if (sort == "highToLow") {
-                  data = await Product.find({ category: category._id }).sort({ offerPrice: -1 }).skip(skip).limit(12);
-              } else if (sort == "aA-zZ") {
-                  data = await Product.find({ category: category._id }).sort({ name: 1 }).skip(skip).limit(12);
-              } else if (sort == "zZ-aA") {
-                  data = await Product.find({ category: category._id }).sort({ name: -1 }).skip(skip).limit(12);
-              } else {
-                  data = await Product.find({ category: category._id }).skip(skip).limit(12);
-              }
+                  const category = await Category.findOne({ name: categoryName }).select('_id');
+                  if (!category) {
+                        return res.status(404).send("Category not found");
+                  }
+
+                  totalProducts = await Product.countDocuments({ category: category._id });
+
+                  if (sort == "lowToHigh") {
+                        data = await Product.find({ category: category._id }).sort({ offerPrice: 1 }).skip(skip).limit(12);
+                  } else if (sort == "highToLow") {
+                        data = await Product.find({ category: category._id }).sort({ offerPrice: -1 }).skip(skip).limit(12);
+                  } else if (sort == "aA-zZ") {
+                        data = await Product.find({ category: category._id }).sort({ name: 1 }).skip(skip).limit(12);
+                  } else if (sort == "zZ-aA") {
+                        data = await Product.find({ category: category._id }).sort({ name: -1 }).skip(skip).limit(12);
+                  } else {
+                        data = await Product.find({ category: category._id }).skip(skip).limit(12);
+                  }
             } else {
-              totalProducts = await Product.countDocuments({});
-              
-              if (sort == "lowToHigh") {
-                  data = await Product.find({}).sort({ offerPrice: 1 }).skip(skip).limit(12);
-              } else if (sort == "highToLow") {
-                  data = await Product.find({}).sort({ offerPrice: -1 }).skip(skip).limit(12);
-              } else if (sort == "aA-zZ") {
-                  data = await Product.find({}).sort({ name: 1 }).skip(skip).limit(12);
-              } else if (sort == "zZ-aA") {
-                  data = await Product.find({}).sort({ name: -1 }).skip(skip).limit(12);
-              } else {
-                  data = await Product.find({}).skip(skip).limit(12);
-              }
+                  totalProducts = await Product.countDocuments({});
+
+                  if (sort == "lowToHigh") {
+                        data = await Product.find({}).sort({ offerPrice: 1 }).skip(skip).limit(12);
+                  } else if (sort == "highToLow") {
+                        data = await Product.find({}).sort({ offerPrice: -1 }).skip(skip).limit(12);
+                  } else if (sort == "aA-zZ") {
+                        data = await Product.find({}).sort({ name: 1 }).skip(skip).limit(12);
+                  } else if (sort == "zZ-aA") {
+                        data = await Product.find({}).sort({ name: -1 }).skip(skip).limit(12);
+                  } else {
+                        data = await Product.find({}).skip(skip).limit(12);
+                  }
             }
-        
+
             const catData = await Category.find({});
             const products = await Product.find({}).sort({ _id: -1 }).limit(3);
-        
-           
-        
-           
-          res.render('user/userCategory',{data,products,catData,categoryName})
-          
-      }catch(err){
-          console.log(err.message)
+
+
+
+
+            res.render('user/userCategory', { data, products, catData, categoryName })
+
+      } catch (err) {
+            console.log(err.message)
       }
-  }
+}
 
 
-  const sortItems = async(req,res)=>{
+const sortItems = async (req, res) => {
       try {
             const catData = req.query._id
             const shop = req.query.shop
-             if(shop == "pricetolow"){
-                const data = await Product.find({is_blocked:false}).sort({offerPrice:1})
-                const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
-                res.render('user/userCategory',{data,products,catData})
-    
-             }else if(shop == "pricetohigh"){
-    
-                    const data = await Product.find({is_blocked:false}).sort({offerPrice:-1})
-                    const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
-                    res.render('user/userCategory',{data,products,catData}) 
-    
-             }else if(shop =="atoz"){
-    
-                const data = await Product.find({is_blocked:false}).sort({name:1})
-                const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
-                res.render('user/userCategory',{data,products,catData}) 
-    
-             }else if(shop == "ztoa"){
-    
-                const data = await Product.find({is_blocked:false}).sort({name:-1})
-                const products = await Product.find({is_blocked:false}).sort({_id:-1}).limit(3)
-                res.render('user/userCategory',{data,products,catData})  
-             } 
+            if (shop == "pricetolow") {
+                  const data = await Product.find({ is_blocked: false }).sort({ offerPrice: 1 })
+                  const products = await Product.find({ is_blocked: false }).sort({ _id: -1 }).limit(3)
+                  res.render('user/userCategory', { data, products, catData })
+
+            } else if (shop == "pricetohigh") {
+
+                  const data = await Product.find({ is_blocked: false }).sort({ offerPrice: -1 })
+                  const products = await Product.find({ is_blocked: false }).sort({ _id: -1 }).limit(3)
+                  res.render('user/userCategory', { data, products, catData })
+
+            } else if (shop == "atoz") {
+
+                  const data = await Product.find({ is_blocked: false }).sort({ name: 1 })
+                  const products = await Product.find({ is_blocked: false }).sort({ _id: -1 }).limit(3)
+                  res.render('user/userCategory', { data, products, catData })
+
+            } else if (shop == "ztoa") {
+
+                  const data = await Product.find({ is_blocked: false }).sort({ name: -1 })
+                  const products = await Product.find({ is_blocked: false }).sort({ _id: -1 }).limit(3)
+                  res.render('user/userCategory', { data, products, catData })
+            }
       } catch (error) {
             console.log(error);
       }
-  }
+}
 
-  const resendOtp=async(req,res)=>{
+const resendOtp = async (req, res) => {
       try {
             const otp = generateOTP();
             console.log(otp)
-            req.session.Data.otp=otp
+            req.session.Data.otp = otp
 
             const mailoptions = {
                   from: Email,
@@ -657,12 +666,12 @@ const filterCategory = async(req,res)=>{
                         console.log("Mail send successfully");
                   }
             })
-            res.json({status:true})
+            res.json({ status: true })
 
       } catch (error) {
-            
+
       }
-  }
+}
 
 
 

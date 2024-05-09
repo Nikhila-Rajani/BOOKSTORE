@@ -57,5 +57,15 @@ router.get('/salesReport',  middleware.isAdmin,adminController.salesGet);
 router.post('/salesReport',  middleware.isAdmin,adminController.filterSalesReportbyDate);
 router.post('/daterangesales',  middleware.isAdmin,adminController.filteringDateRange);
 
+/////////// Offer /////////
+
+router.get('/addOffer',adminController.offerGet);
+router.post('/addOffer',adminController.offerPost);
+router.post('/deleteOffer',adminController.deleteOffer);
+
+/////////// Chart /////////
+
+router.get('/adminDashboard/monthlydata',adminController.monthlyData)
+router.get('/adminDashboard/yearlydata',adminController.displayYearlyData)
 
 module.exports = router

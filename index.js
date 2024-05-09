@@ -46,6 +46,12 @@ app.use("/",user)
 
 app.use('/admin',admin)
 
+app.use('*',(req,res,next)=>{
+  // res.send("hrlll")
+  res.render('user/error404')
+
+})
+
 
 app.listen(3000, () => {
       console.log(`http://localhost:3000`);

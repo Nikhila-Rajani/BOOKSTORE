@@ -24,7 +24,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="/admin-assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
+                <img src="/admin-assets\imgs\theme\bookWorm.png" class="logo" alt="Evara Dashboard">
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
@@ -33,7 +33,7 @@
         <nav>
             <ul class="menu-aside">
                 <li class=" ">
-                    <a class="menu-link" href=""> <i class="icon material-icons md-home"></i>
+                    <a class="menu-link" href="adminDashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
@@ -41,37 +41,40 @@
                     <a class="menu-link" href="adminproduct"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
-                  
+
                 </li>
                 <li class="">
-                    <a class="menu-link" href="adminCategory"> <i class="icon material-icons md-shopping_cart"></i>
+                    <a class="menu-link" href="adminCategory"><i class="icon material-icons md-solid md-list"></i>
                         <span class="text">Catagory</span>
                     </a>
-                    
+
                 </li>
                 <li class="menu-item ">
                     <a class="menu-link" href="orderList"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
-                    </a>                   
+                    </a>
                 </li>
-               
+
                 <li class="">
                     <a class="menu-link" href="adminUser"> <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
-                    </a>                   
-                </li>
-                <li class="">
-                    <a class="menu-link" href="allCoupon"> <i
-                                class="icon material-icons md-shopping_cart"></i>
-                          <span class="text">Coupon</span>
                     </a>
                 </li>
-                    <li class="">
-                        <a class="menu-link" href="salesReport"> <i
-                                    class="icon material-icons md-shopping_cart"></i>
-                              <span class="text">Sales</span>
-                        </a>
-                    </li>              
+                <li class="">
+                    <a class="menu-link" href="allCoupon"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupon</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a class="menu-link" href="salesReport"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Sales</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a class="menu-link" href="addOffer"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Offers</span>
+                    </a>
+                </li>
             </ul>
             <hr>
             <br>
@@ -220,6 +223,21 @@
                         <li class="page-item"><a class="page-link" href="#">16</a></li>
                         <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
                     </ul> -->
+                </nav>
+            </div>
+            <div class="pagination-area mt-30 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+
+                        <% for( let i=1; i <=numofPage; i++ ) { %>
+                            <li class="page-item "><a class="page-link" href="/admin/orderList?page=<%= i %>">
+                                    <%= i %>
+                                </a></li>
+
+
+                            <% } %>
+
+                    </ul>
                 </nav>
             </div>
         </section> <!-- content-main end// -->

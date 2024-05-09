@@ -172,7 +172,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
+                        <a href="index.html"><img src="assets\imgs\theme\bookWorm.png"  alt="logo"></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -254,7 +254,7 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
+                        <a href="index.html"><img src="assets\imgs\theme\bookWorm.png"  alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-categori-wrap d-none d-lg-block">
@@ -532,7 +532,7 @@
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
-                    <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
+                    <a href="index.html"><img src="assets\imgs\theme\bookWorm.png"  alt="logo"></a>
                 </div>
                 <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
                     <button class="close-style search-close">
@@ -808,6 +808,7 @@
                                     
                                     <div class="table-responsive">
                                         <table class="table">
+
                                             <tbody>
                                                 <tr>
                                                     <td class="cart_total_label">Subtotal</td>
@@ -819,12 +820,23 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="cart_total_label">Total</td>
-                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">RS: <%= order.totalamount %></span></strong></td>
+                                                    <input type="hidden" value="<%= order.totalamount %>" id="price">
+                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand" >RS:<%= order.totalamount %></span></strong></td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <% if (order.status === "Delivered") { %>
+                                            <a href="/invoice?id=<%= order._id %>"><button
+                                                class="btn  mr-10 mb-sm-15">Download Invoice</button></a>
+                                         <input type="hidden" id="hi" value="<%= order._id %>">
+                                        <% } %>
                                     </div>
-                                    <!-- <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a> -->
+                                   <% if (order.status === "payment failed") { %>
+                                    <button onclick="payAgain(`<%=order._id %>`)"
+                                        class="btn btn-fill-out btn-block mt-30">Retry
+                                        Payment</button>
+                                   <% } %>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -865,7 +877,7 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
+                                <a href="index.html"><img src="assets\imgs\theme\bookWorm.png"  alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
                             <p class="wow fadeIn animated">
@@ -985,6 +997,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 <script>
 
@@ -1004,7 +1017,7 @@
             success:(response)=>{
                 console.log(response)
                 if(response.status === "ok"){
-                    alert('kk')
+                   
                     window.location.reload()
                 }else{
                     alert('err in reload')
@@ -1123,6 +1136,109 @@
     });
 });
 
+
+function payAgain(orderid){
+    console.log('its here')
+ 
+
+   
+ 
+    const price = document.getElementById('price').value
+
+    console.log('the price is ',price)
+    
+   
+   
+                $.ajax({
+                      url:"/payAgain",
+                      method:'post',
+                      data:{
+                            orderid,
+                            price
+
+                      },
+                      success: (response) => {
+                            if (response.status === true ) {
+                                window.location.href = '/ordersuccess'
+                            }else if(response.status === "Confirmed"){
+                                const orderDetails = response.orderDetails
+                                
+                                var options = {
+                                    "key": "rzp_test_nrHH3zKsb4hiiY",
+                                    "amount": response.razorpayOrder.amount,
+                                    "currency": "INR",
+                                    "name": "BOOKSTORE",
+                                    "description": "Test Transaction",
+                                    "image": "https://example.com/your_logo",
+                                    "order_id": response.razorpayOrder.id, 
+                                    "handler": function (response){
+                                        successGreen(response,orderDetails)
+                                       
+                                    },
+                                    "prefill": { 
+                                        "name": "Gaurav Kumar", 
+                                        "email": "gaurav.kumar@example.com", 
+                                        "contact": "9000090000"  
+                                    },
+                                    "notes": {
+                                        "address": "Razorpay Corporate Office"
+                                    },
+                                    "theme": {
+                                        "color": "#3399cc"
+                                    }
+                                };
+                               console.log(options)
+                                var rzp1 = new Razorpay(options);
+                                rzp1.on("payment.failed",function(response){
+                                    paymentFailed(orderDetails)
+                                })
+                                 rzp1.open(); 
+                            }else if(response.status === "error"){
+                                Swal.fire({
+                                    title: "Cash on Delivery is not Available for Order Above 1000",
+                                    showClass: {
+                                      popup: `
+                                        animate__animated
+                                        animate__fadeInUp
+                                        animate__faster
+                                      `
+                                    },
+                                    hideClass: {
+                                      popup: `
+                                        animate__animated
+                                        animate__fadeOutDown
+                                        animate__faster
+                                      `
+                                    }
+                                  });
+                            }
+                        }
+                })
+          
+      
+
+    
+
+}
+function successGreen(response , orderDetails){
+
+
+
+    $.ajax({
+        url:'/paymentsucces',
+        method:'post',
+        data:{
+            response,
+            orderDetails,
+           
+        },
+        success:(response)=>{
+            if(response.status === 'success'){
+                window.location.href = '/ordersuccess'
+            }
+        }
+    })
+    }
 
 </script>
 

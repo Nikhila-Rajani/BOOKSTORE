@@ -46,6 +46,8 @@ router.post('/placeOrder',middleware.isLogin,orderController.placeOrder);
 router.get('/ordersuccess',middleware.isLogin,orderController.orderSuccess);
 router.get('/orderDetails',middleware.isLogin,orderController.orderDetails)
 router.get('/viewOrder',middleware.isLogin,orderController.viewOrder);
+router.post('/payAgain',orderController.payAgain);
+router.post('/paymentsucces',orderController.pendingPaymentSuccess)
 
 router.post('/search',userController.searchProduct)
 
@@ -55,6 +57,9 @@ router.post('/cancelOrder',orderController.userCancelOrder);
 router.post('/cancelIndividual',orderController.cancelIndividual);
 router.post('/razorsuccess',orderController.razorpaySuccess);
 router.post('/returnOrder',orderController.returnOrder);
+router.get('/invoice',orderController.getInvoice);
+router.post('/razorpayfailed',orderController.razorpayfailed);
+
 
 
 router.get('/Wishlist',WishListController.LoadWishlist);

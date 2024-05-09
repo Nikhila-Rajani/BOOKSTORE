@@ -24,7 +24,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="/admin-assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
+                <img src="/admin-assets\imgs\theme\bookWorm.png" class="logo" alt="Evara Dashboard">
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
@@ -199,7 +199,32 @@
                               
                             </div>
                         </div>
+                        
+                    </div><div class="col-lg-3"style="margin-top: 74px;" >
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Media</h4>
+                            </div>
+                            <div class="card-body">
+                               <% for( let i = 0; i < productDetails.image.length; i++ ) { %>
+                               
+                            
+                                    <div class="input-upload">
+                                        
+                                        <img src="/uploads/<%=productDetails.image[i]  %>" alt="">
+                                        <span id="delete"  onclick="deleteImage('<%=productDetails._id %>','<%= i %>')">Delete</span>
+                                        
+                                    </div>
+                                    <% } %>
+                                   
+                                <input name="image" id="" class="form-control" type="file" accept="image/*" multiple>
+                            </div>
+                        </div> 
+                        <div class="d-grid">
+                            
+                        </div>
                     </div>
+
                     <div class="col-lg-5" style="margin-top: 74px;">
                         <div class="row">
                             <div class="col-lg-12">
@@ -231,6 +256,7 @@
                   <button class="btn btn-light rounded font-sm mr-5 text-body hover-up" type="submit">Update</button>
                   <!-- <button class="btn btn-md rounded font-sm hover-up" id="delete">Delete</button> -->
               </div>
+              
             </form>
         </section> 
         <!-- <footer class="main-footer font-xs">
@@ -257,7 +283,7 @@
     <script src="/admin-assets/js/main.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
-<!-- <script>
+<script>
 
 
 function previewImages() {
@@ -282,7 +308,26 @@ function previewImages() {
       }
   }
       
-</script>  -->
+</script> 
+<script>
+    function deleteImage(id,index){
+        alert("its here")
+        $.ajax({
+          url:"/admin/deleteimage",
+          method:"post",
+          data:{
+                id,
+                index
+          },
+          success:(response)=>{
+        
+         if(response.status === "delete"){
+          window.location.reload()
+         }
+          }
+        })
+    }
+</script>
 <script>
 
       function nameFun() {
@@ -442,25 +487,9 @@ function previewImages() {
       })
 
 
+    </script>
+      
 
-      function deleteImage(id,index){
-
-          $.ajax({
-            url:"/admin/deleteimage",
-            method:"post",
-            data:{
-                  id,
-                  index
-            },
-            success:(response)=>{
-          
-           if(response.status === "delete"){
-            window.location.reload()
-           }
-            }
-          })
-      }
-</script>
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-transactions-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:33 GMT -->
