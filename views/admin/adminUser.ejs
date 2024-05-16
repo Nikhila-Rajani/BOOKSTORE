@@ -203,14 +203,13 @@
                                           <!-- <td><span class="badge rounded-pill alert-success">Active</span></td> -->
                                           <td><span class="badge rounded-pill alert-success">Unblocked</span></td>
                                           <td class="">
-                                                <a href="/admin/block-user?id=<%= userData[i]._id %>" class="btn btn-sm btn-block rounded font-sm mt-15 block-btn" style="background-color: black; color: white;">BLOCK</a>
+                                                <a onclick="userBlock(`<%= userData[i]._id %>`)" class="btn btn-sm btn-block rounded font-sm mt-15 block-btn" style="background-color: black; color: white;">BLOCK</a>
                                           </td>
                                      
                                     <% }else{ %>
-                                          <!-- <td><span class="badge rounded-pill alert-success">Inactive</span></td> -->
                                           <td><span class="badge rounded-pill alert-success">Blocked</span></td>
                                           <td class="">
-                                                <a href="/admin/unblock-user?id=<%= userData[i]._id %>" class="btn btn-sm btn-block rounded font-sm mt-15 block-btn" style="background-color: black; color: white;">UNBLOCK</a>
+                                                <a  onclick="userunBlock(`<%= userData[i]._id %>`)" class="btn btn-sm btn-block rounded font-sm mt-15 block-btn" style="background-color: black; color: white;">UNBLOCK</a>
                                           </td>
                                           <% } %>
 
@@ -239,3 +238,83 @@
                 </nav>
             </div>
         </section>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- Include SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" 
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" 
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    function userBlock(id){
+        Swal.fire({
+            title: 'Confirm Block',
+            text: 'Are you sure you want to block this user?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, block',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/admin/block-user",
+                    method: "POST", 
+                    data: {
+                        id
+                    },  
+                
+                    success: (response) => {
+                        if (response.status === "Blocked") {
+                            Swal.fire('User Blocked', 'The user has been blocked successfully.', 'success').then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', 'Unable to block user.', 'error');
+                        }
+                    },
+                    error: (error) => {
+                        Swal.fire('Error', 'An error occurred while processing your request.', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+
+    function userunBlock(id){
+        Swal.fire({
+            title: 'Confirm UnBlock',
+            text: 'Are you sure you want to Unblock this user?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Unblock',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/admin/unblock-user",
+                    method: "POST", 
+                    data: {
+                        id
+                    },  
+                
+                    success: (response) => {
+                        if (response.status === "Unblocked") {
+                            Swal.fire('User UnBlocked', 'The user has been Unblocked successfully.', 'success').then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', 'Unable to Unblock user.', 'error');
+                        }
+                    },
+                    error: (error) => {
+                        Swal.fire('Error', 'An error occurred while processing your request.', 'error');
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+

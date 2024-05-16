@@ -9,10 +9,15 @@ const Wallet = require('../model/walletModel')
 const Category = require('../model/CategoryModel');
 const offer = require('../model/offerModel');
 const Offer = require('../model/offerModel');
+const {v4 : uuidv4} = require('uuid')
 
 
 const Email = process.env.Email;
 const Password = process.env.Password;
+
+function generateReferalcode(){
+      return uuidv4().substring(0,8)
+  }
 
 const transport = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -82,7 +87,8 @@ const userRegister = async (req, res) => {
 const getUser = async (req, res) => {
       try {
 
-            const { username, email, mobile, password, conpassword } = req.body
+            const { username, email, mobile, password, conpassword ,otherreferalcode} = req.body
+            const referalcode = generateReferalcode()
 
             const existingUser = await User.findOne({ email: email })
             if (existingUser) {
@@ -100,11 +106,14 @@ const getUser = async (req, res) => {
                         mobile,
                         password,
                         conpassword,
-                        otp
+                        otp,
+                        referalcode,
+                        otherreferalcode
 
                   }
 
                   req.session.Data = req.session.Data || {};
+                  console.log("sessionnnnnnn dattaaaaa",req.session.Data);
 
 
                   Object.assign(req.session.Data, newUser)
@@ -154,23 +163,72 @@ const verifyotp = async (req, res) => {
                   console.log('stored otp :', req.session.Data.otp)
                   console.log('from body', req.body.otp);
                   const securePass = await passwordHashing(req.session.Data.password)
+                  const referalcode = generateReferalcode();
+                  const Tid = generateOTP();
                   const newUser = new User({
                         username: req.session.Data.username,
                         email: req.session.Data.email,
                         mobile: req.session.Data.mobile,
-                        password: securePass
+                        password: securePass,
+                        referalcode : referalcode
+                        
 
                   })
                   await newUser.save()
                   const newWallet = new Wallet({
                         user: newUser._id
                   })
+                  
                   await newWallet.save()
                   console.log("this is created Wallet", newWallet)
+
+                  if(req.session.Data.otherreferalcode){
+                        const findUser = await User.findOne({ referalcode: req.session.Data.otherreferalcode });
+                        console.log("ther other user isss",findUser);
+                        // const findWallet = await Wallet.findOne({userId: findUser._id });
+
+                        // if( findWallet){
+                              constupdateWallet = await Wallet.findOneAndUpdate(
+                                    { user: findUser._id},
+                                    {
+                                          $inc: {
+                                                walletAmount:200
+                                          },
+                                          $push: {
+                                                transactions:{
+                                                      transactionid:Tid,
+                                                      // date:date,
+                                                      amount:200
+                                                }
+                                          }
+                                    }
+                              );
+                              
+                              constupdateWallet = await Wallet.findOneAndUpdate(
+                                    {user: newUser._id},
+                                    {
+                                          $inc: {
+                                                walletAmount:100
+                                          },
+                                          $push: {
+                                                transactions:{
+                                                      transactionid:Tid,
+                                                      // date:date,
+                                                      amount:100
+                                                }
+                                          }
+                                    }
+                              );       
+                              
+                       
+                  
+            }
                   res.json({ status: true })
+                             
             } else {
                   res.json({ status: "invalid" })
             }
+      
 
       } catch (error) {
             console.log(error);
@@ -216,6 +274,8 @@ const detailedProduct = async (req, res) => {
             const id = req.query.id
             const user = req.session.user
             const cartFind = await Cart.findOne({ user: user, "products.productId": id })
+            const product = await Product.find({}).limit(4)
+            console.log("produccttt",product);
 
             const proData = await Product.findById({ _id: id }).populate('category')
             const category = await Category.find({})
@@ -227,7 +287,7 @@ const detailedProduct = async (req, res) => {
                   cartStatus = false;
             }
 
-            res.render("user/detailedProduct", { proData, cartStatus, offer });
+            res.render("user/detailedProduct", { proData, cartStatus, offer,product });
 
       } catch (error) {
             console.log(error);

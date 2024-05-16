@@ -4,8 +4,13 @@ const Category = require("../model/CategoryModel");
 
 const adminCategory = async (req, res) => {
       try {
-            const catData = await Category.find({})
-            res.render('admin/adminCategory', { catData })
+            const page = req.query.page ;
+            const pageSize = 6;
+            const pdtskip = (page-1) * pageSize
+            const catCount = await Category.find({}).count()
+            const numofPage = Math.ceil( catCount/ pageSize)
+            const catData = await Category.find({}).skip(pdtskip).limit(pageSize);
+            res.render('admin/adminCategory', { catData ,numofPage})
 
       } catch (error) {
             console.log(error);

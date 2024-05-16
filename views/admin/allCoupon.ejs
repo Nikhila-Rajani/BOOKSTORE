@@ -189,6 +189,7 @@
                                                   <th>Staring Date</th>
                                                   <th>Ending Date</th>
                                                   <th>Minimum Purchase</th>
+                                                  <th>Maximum Purchase</th>
                                                   <th>Discount</th>
                                                   <th class="text-end">Action</th>
                                                   <th class="text-end">delete</th>
@@ -206,6 +207,7 @@
                                                         <td><%= element.startdate %></td>
                                                         <td><%= element.enddate %></td>
                                                         <td><%= element.minimumpurchase %></td>
+                                                        <td><%= element.maximumpurchase %></td>
                                                         <td><%= element.percentage %></td>
                                                         <td class="text-end">
                                                                   <% if ( element.isblocked == true ) { %>
@@ -239,6 +241,21 @@
                                       </table>
                                      
                                   </div> 
+                                  <div class="pagination-area mt-30 mb-50">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-start">
+                    
+                                            <% for( let i=1; i <=numofPage; i++ ) { %>
+                                                <li class="page-item "><a class="page-link" href="/admin/allCoupon?page=<%= i %>">
+                                                        <%= i %>
+                                                    </a></li>
+                    
+                    
+                                                <% } %>
+                    
+                                        </ul>
+                                    </nav>
+                                </div> 
                                   
                               </div> 
                             

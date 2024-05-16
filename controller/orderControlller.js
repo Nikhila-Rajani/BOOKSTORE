@@ -34,7 +34,6 @@ const placeOrder = async (req,res) => {
       if(paymentMethod == "COD"){
             const findCart = await Cart.findOne({_id:cartId}).populate('products.productId')
             if(findCart.total <1000){
-            console.log("carttt",findCart);
             const cartProduct = findCart.products.map((element=>{
                   let pdata = {
                   product:element.productId,
@@ -128,6 +127,7 @@ const placeOrder = async (req,res) => {
 
 const orderSuccess = async(req,res)=>{
       try {
+            const findOrder = await Order
             res.render('user/ordersuccess')
       } catch (error) {
             console.log(error.message);

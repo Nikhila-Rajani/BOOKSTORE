@@ -15,8 +15,8 @@ router.post('/', adminController.verifyAdmin);
 router.get('/adminDashboard', middleware.isAdmin, adminController.adminDashboard);
 router.get('/adminproduct', middleware.isAdmin, adminController.adminproduct);
 router.get('/adminUser', middleware.isAdmin, adminController.adminUser);
-router.get('/block-user', middleware.isAdmin,adminController.blockuser);
-router.get('/unblock-user', middleware.isAdmin,adminController.unblockUser);
+router.post('/block-user', middleware.isAdmin,adminController.blockuser);
+router.post('/unblock-user', middleware.isAdmin,adminController.unblockUser);
 // router.get('/unblock-user', middleware.isAdmin, adminController.toggleuser);
 
 ///////////////category///////////////////

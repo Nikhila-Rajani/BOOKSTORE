@@ -21,10 +21,13 @@ const userSchema = mongoose.Schema({
             type:String,
             required:true,
       },
+      referalcode:{
+            type:String
+      },
       is_blocked:{
             type:Boolean,
             default:false,
-      }
+      }     
      
 },{versionKey : false});
 

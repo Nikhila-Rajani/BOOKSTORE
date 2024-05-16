@@ -18,6 +18,30 @@
       <link rel="shortcut icon" type="image/x-icon" href="/admin-assets/imgs/theme/favicon.svg">
       <!-- Template CSS -->
       <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+      <style>
+            .preview-wrapper {
+                  position: relative;
+                  display: inline-block;
+                  margin: 10px;
+              }
+              
+              .image-preview {
+                  width: 100px;
+                  height: 100px;
+                  border: 1px solid #ccc;
+              }
+              
+              .remove-btn {
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                  background: red;
+                  color: white;
+                  border: none;
+                  cursor: pointer;
+              }
+              
+      </style>
 </head>
 
 <body>
@@ -75,37 +99,9 @@
                                         <span class="text">Sales</span>
                                   </a> 
                               </li>
-                        <!-- <li class="menu-item">
-                    <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
-                        <span class="text">Reviews</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i>
-                        <span class="text">Brands</span> </a>
-                </li> -->
-                        <!-- <li class="menu-item">
-                    <a class="menu-link" disabled href="#"> <i class="icon material-icons md-pie_chart"></i>
-                        <span class="text">Statistics</span>
-                    </a>
-                </li> -->
                   </ul>
                   <hr>
-                  <!-- <ul class="menu-aside">
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
-                        <span class="text">Settings</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-settings-1.html">Setting sample 1</a>
-                        <a href="page-settings-2.html">Setting sample 2</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text"> Starter page </span>
-                    </a>
-                </li> -->
+                  
                   </ul>
                   <br>
                   <br>
@@ -265,6 +261,7 @@
                                                             <h4>Media</h4>
                                                       </div>
                                                       <div class="card-body">
+
                                                             <div class="input-upload">
                                                                   <label for="Pro_img" class="form-label">Upload
                                                                         Images</label>
@@ -448,28 +445,61 @@
 
 
 
-      function previewImages() {
-           
-            const input = document.getElementById('Pro_img');
-            const previewContainer = document.getElementById('imagePreviewContainer');
-            const files = input.files;
+     function previewImages() {
+    const input = document.getElementById('Pro_img');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const files = input.files;
 
-            // Clear previous previews
-            previewContainer.innerHTML = '';
+    // Clear previous previews
+    previewContainer.innerHTML = '';
 
-            for (const file of files) {
-                  const reader = new FileReader();
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
 
-                  reader.onload = function (e) {
-                        const preview = document.createElement('img');
-                        preview.src = e.target.result;
-                        preview.classList.add('image-preview');
-                        previewContainer.appendChild(preview);
-                  };
+        reader.onload = (function(index) {
+            return function(e) {
+                const previewWrapper = document.createElement('div');
+                previewWrapper.classList.add('preview-wrapper');
 
-                  reader.readAsDataURL(file);
-            }
-      }
+                const preview = document.createElement('img');
+                preview.src = e.target.result;
+                preview.classList.add('image-preview');
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.innerText = 'x';
+                removeBtn.classList.add('remove-btn');
+                removeBtn.type = 'button'; // Ensure it does not submit a form if wrapped inside one.
+                removeBtn.onclick = function() {
+                    // Remove the preview and the file from the input
+                    removeFile(index);
+                    previewWrapper.remove();
+                };
+
+                previewWrapper.appendChild(preview);
+                previewWrapper.appendChild(removeBtn);
+                previewContainer.appendChild(previewWrapper);
+            };
+        })(i);
+
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeFile(index) {
+    const dt = new DataTransfer();
+    const input = document.getElementById('Pro_img');
+    const { files } = input;
+
+    for (let i = 0; i < files.length; i++) {
+        if (index !== i) {
+            dt.items.add(files[i]);
+        }
+    }
+
+    input.files = dt.files; // Set the new FileList to input
+}
+
 
 
 

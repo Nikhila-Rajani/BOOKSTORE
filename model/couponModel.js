@@ -16,6 +16,9 @@ const couponSchema = new mongoose.Schema({
     minimumpurchase:{
         type:Number
     },
+    maximumpurchase:{
+        type:Number
+    },
     code:{
         type:String
     },

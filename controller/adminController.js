@@ -143,8 +143,14 @@ const adminDashboard = async (req, res) => {
 //////adminproduct////////////////
 const adminproduct = async (req, res) => {
       try {
-            const Product = await product.find({})
-            res.render('admin/adminproduct', { Product });
+            const page = req.query.page ;
+            const pageSize = 6;
+            const pdtskip = (page-1) * pageSize
+            const pdctCount = await product.find({}).count()
+            const numofPage = Math.ceil( pdctCount/ pageSize)
+            const Product = await product.find({}).skip(pdtskip).limit(pageSize)
+
+            res.render('admin/adminproduct', { Product , numofPage});
 
       } catch (error) {
             console.log(error);
@@ -173,13 +179,14 @@ const adminUser = async (req, res) => {
 
 const blockuser = async (req, res) => {
       try {
-            const id = req.query.id;
+            console.log("blockil und hmmmm");
+            const id = req.body.id;
             const findUser = await User.findById({ _id: id });
 
             if (findUser.is_blocked == false) {
                   const userData = await User.updateOne({ _id: id }, { is_blocked: true })
             }
-            res.redirect('/admin/adminUser')
+           res.json({status:"Blocked"});
       } catch (error) {
             console.log("There was an error in blocking user", error);
 
@@ -188,13 +195,14 @@ const blockuser = async (req, res) => {
 
 const unblockUser = async (req, res) => {
       try {
-            const id = req.query.id;
+            console.log("unnnnnnblockil und hmmmm");
+            const id = req.body.id;
             const findUser = await User.findById({ _id: id });
 
             if (findUser.is_blocked == true) {
                   const userData = await User.updateOne({ _id: id }, { is_blocked: false })
             }
-            res.redirect('/admin/adminUser')
+            res.json({status:"Unblocked"})
 
       } catch (error) {
             console.log(error);
@@ -433,7 +441,7 @@ const monthlyData = async (req, res) => {
 const displayYearlyData = async (req, res) => {
       try {
             console.log('......sldfhgiudarhiupyg....');
-            const START_YEAR = 2022;
+            const START_YEAR = 2013;
             const currentYear = new Date().getFullYear();
             const yearlySales = Array.from({ length: currentYear - START_YEAR + 1 }, () => 0);
 

@@ -820,15 +820,35 @@
                                       </tr>
                                       <tr>
                                           <th>Discount</th>
-                                          <td colspan="2"><span id="discount"></span>0%</td>
+                                          <td colspan="2"><span id="discount"></span></td>
                                       </tr>
+                                      <% if (userCart.total<1500) { %>
+                                       
+                                 
+                                      <tr>
+                                        <th>Delivary Charge</th>
+                                        <td colspan="2"><span id="delevary"></span>100</td>
+                                    </tr>
                                       <tr>
                                           <th>Total</th>
                                           <td colspan="2" class="product-subtotal"><span id="totalprice"
                                                   class="font-xl text-brand fw-900">
-                                                  <%= userCart.total %>
+                                                  <%= userCart.total+100 %>
                                               </span></td>
                                       </tr>
+                                      <% } else {%>
+                                        <tr>
+                                            <th>Delivary Charge</th>
+                                            <td colspan="2"><span id="delevary"></span>0</td>
+                                        </tr>
+                                          <tr>
+                                              <th>Total</th>
+                                              <td colspan="2" class="product-subtotal"><span id="totalprice"
+                                                      class="font-xl text-brand fw-900">
+                                                      <%= userCart.total %>
+                                                  </span></td>
+                                          </tr>
+                                        <%} %>
                                     </tbody>
                                 </table>
                             </div>
@@ -1221,7 +1241,7 @@ function successGreen(response,orderDetails,cartId){
                     Swal.fire({
                         icon: "warning",
                         title: "Oops...",
-                        text: "Total amount is less!",
+                        text: "Not reach Purchase Amount!",
                         iconColor:"#3F2520",
                         customClass: {
                             confirmButton: 'black-ok-button'

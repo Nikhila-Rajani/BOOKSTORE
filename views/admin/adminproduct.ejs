@@ -151,14 +151,6 @@
             <div class="card mb-4">
                 <header class="card-header">
                     <div class="row gx-3">
-                        <div class="col-lg-4 col-md-6 me-auto">
-                            <input type="text" placeholder="Search..." class="" style="width: 200px; height: 30px;margin-right: 100px;">
-                        </div>
-                        <div class="col-lg-2 col-6 col-md-3">
-                            <select class="" name="catName" style="width: 150px; height: 30px;margin-right: 100px;" aria-placeholder="Catagory">
-                              
-                            </select>
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-sm">
                                 <thead>
@@ -221,7 +213,21 @@
                             </table>
                         </div>
                         
-                        
+                        <div class="pagination-area mt-30 mb-50">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-start">
+            
+                                    <% for( let i=1; i <=numofPage; i++ ) { %>
+                                        <li class="page-item "><a class="page-link" href="/admin/adminProduct?page=<%= i %>">
+                                                <%= i %>
+                                            </a></li>
+            
+            
+                                        <% } %>
+            
+                                </ul>
+                            </nav>
+                        </div> 
                         
                         
                     </div>

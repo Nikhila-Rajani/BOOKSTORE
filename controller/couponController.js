@@ -19,7 +19,7 @@ const loadAddcoupon = async (req,res) => {
 const addCouponPost = async(req,res)=>{
       try{
             console.log("addcoupon nte ullil ndd tto");
-            const{couponName,Startdate,Enddate,MinimumAmount, Percentage} = req.body
+            const{couponName,Startdate,Enddate,MinimumAmount,MaximumAmount, Percentage} = req.body
              //console.log("This is coupon nas me",couponName);
              //console.log("ellam undeyy",Startdate,Enddate,MinimumAmount,Presentage);
              const ExistingCoupon = await Coupon.findOne({cname:couponName});
@@ -36,6 +36,7 @@ const addCouponPost = async(req,res)=>{
                   startdate:Startdate,
                   enddate:Enddate,
                   minimumpurchase:MinimumAmount,
+                  maximumpurchase:MaximumAmount,
                   code:couponcode,
                   percentage:Percentage
 
@@ -59,8 +60,13 @@ const addCouponPost = async(req,res)=>{
 
 const allCouponGet = async(req,res) => {
       try {
+            const page = req.query.page;
+            const pageSize = 6;
+            const pdtskip = (page-1)*pageSize
+            const copCount = await Coupon.find({}).count()
+            const numofPage = Math.ceil(copCount/pageSize);
             const coupon = await Coupon.find({})
-            res.render('admin/allCoupon',{coupon})
+            res.render('admin/allCoupon',{coupon,numofPage}).skip(pdtskip).limit(numofPage)
       } catch (error) {
             console.log(error.meesa
             );
@@ -142,7 +148,7 @@ const userApplyCoupon = async (req,res) => {
                   if(userinuser){
                         res.json({status:"Applied"})
                   }else{
-                        if(findCart.total > findCoupon.minimumpurchase){
+                        if(findCart.total > findCoupon.minimumpurchase && findCart.total < findCoupon.maximumpurchase){
                               console.log("amont true")
                               let totalAmount = findCart.total;
                               console.log(totalAmount)

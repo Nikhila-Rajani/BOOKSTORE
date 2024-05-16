@@ -46,32 +46,32 @@ router.post('/placeOrder',middleware.isLogin,orderController.placeOrder);
 router.get('/ordersuccess',middleware.isLogin,orderController.orderSuccess);
 router.get('/orderDetails',middleware.isLogin,orderController.orderDetails)
 router.get('/viewOrder',middleware.isLogin,orderController.viewOrder);
-router.post('/payAgain',orderController.payAgain);
-router.post('/paymentsucces',orderController.pendingPaymentSuccess)
+router.post('/payAgain',middleware.isLogin,orderController.payAgain);
+router.post('/paymentsucces',middleware.isLogin,orderController.pendingPaymentSuccess)
 
 router.post('/search',userController.searchProduct)
 
 router.get('/sort',userController.sortItems)
 router.get('/filter',userController.filterCategory);
-router.post('/cancelOrder',orderController.userCancelOrder);
-router.post('/cancelIndividual',orderController.cancelIndividual);
-router.post('/razorsuccess',orderController.razorpaySuccess);
-router.post('/returnOrder',orderController.returnOrder);
-router.get('/invoice',orderController.getInvoice);
-router.post('/razorpayfailed',orderController.razorpayfailed);
+router.post('/cancelOrder',middleware.isLogin,orderController.userCancelOrder);
+router.post('/cancelIndividual',middleware.isLogin,orderController.cancelIndividual);
+router.post('/razorsuccess',middleware.isLogin,orderController.razorpaySuccess);
+router.post('/returnOrder',middleware.isLogin,orderController.returnOrder);
+router.get('/invoice',middleware.isLogin,orderController.getInvoice);
+router.post('/razorpayfailed',middleware.isLogin,orderController.razorpayfailed);
 
 
 
-router.get('/Wishlist',WishListController.LoadWishlist);
-router.post('/Wishlist',WishListController.addtoWishlist);
-router.post('/deleteWishlist',WishListController.deleteWishlist);
-router.post('/cart',cartController.addtoCart);
+router.get('/Wishlist',middleware.isLogin,WishListController.LoadWishlist);
+router.post('/Wishlist',middleware.isLogin,WishListController.addtoWishlist);
+router.post('/deleteWishlist',middleware.isLogin,WishListController.deleteWishlist);
+router.post('/cart',middleware.isLogin,cartController.addtoCart);
 
 
-router.get('/userWallet',walletController.LoadWallet);
+router.get('/userWallet',middleware.isLogin,walletController.LoadWallet);
 
-router.get('/userCoupon',couponController.userCouponGet);
-router.post('/ApplyCoupon',couponController.userApplyCoupon)
+router.get('/userCoupon',middleware.isLogin,couponController.userCouponGet);
+router.post('/ApplyCoupon',middleware.isLogin,couponController.userApplyCoupon)
 
 
 

@@ -394,10 +394,25 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div> <!-- .col// -->
-                    </div> <!-- .row // -->
-                </div> <!-- card body .// -->
-            </div> <!-- card .// -->
+                            <div class="pagination-area mt-30 mb-50">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-start">
+                
+                                        <% for( let i=1; i <=numofPage; i++ ) { %>
+                                            <li class="page-item "><a class="page-link" href="/admin/adminCategory?page=<%= i %>">
+                                                    <%= i %>
+                                                </a></li>
+                
+                
+                                            <% } %>
+                
+                                    </ul>
+                                </nav>
+                            </div> 
+                        </div> 
+                    </div>
+                </div>
+            </div> 
         </section>
         <!-- <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">

@@ -242,12 +242,12 @@
                         <canvas id="myChart" height="120px"></canvas>
                     </article>
                 </div>
-                <div class="card mb-4">
+                <!-- <div class="card mb-4">
                     <article class="card-body">
                         <h5 class="card-title" style="color: black;">Sale statistics</h5>
                         <canvas id="MyChart" height="140px"></canvas>
                     </article>
-                </div>
+                </div> -->
             </div>
             <!-- <div class="col-xl-4 col-lg-12">
                 <div class="card mb-4">
@@ -377,6 +377,7 @@
         const renderMonthlySalesChart = async () => {
             console.log('........itss here')
             const monthlySalesData = await fetchMonthlyData();
+            const yearlySalesData = await fetchYearlyData();
             var ctx = document.getElementById('myChart').getContext('2d');
             var chart = new Chart(ctx, {
                
@@ -391,6 +392,14 @@
                         backgroundColor: 'rgba(44, 120, 220, 0.2)',
                         borderColor: 'rgba(44, 120, 220)',
                         data: monthlySalesData
+                    },
+                    {
+                        label: 'Yearly Sales',
+                        data: yearlySalesData,
+                        backgroundColor: 'rgba(380, 200, 230, 0.2)',
+                        borderColor: 'rgb(380, 200, 230)',
+                        tension: 0.3,
+                        fill: true,
                     }]
                 },
                 options: {
@@ -405,7 +414,7 @@
 
         const renderYearlySalesChart = async () => {
             console.log('its herererererr')
-            const yearlySalesData = await fetchYearlyData();
+          
             
 
             var ctc = document.getElementById('MyChart').getContext('2d');
@@ -415,14 +424,7 @@
                 type: 'line',
                 data: {
                     labels: ['2022', '2023', '2024', '2025'],
-                    datasets: [{
-                        label: 'Yearly Sales',
-                        data: yearlySalesData,
-                        backgroundColor: 'rgba(380, 200, 230, 0.2)',
-                        borderColor: 'rgb(380, 200, 230)',
-                        tension: 0.3,
-                        fill: true,
-                    }]
+                    datasets: []
                 },
                 options: {
                     scales: {

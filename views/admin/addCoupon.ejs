@@ -192,6 +192,11 @@
                                           <input type="number" placeholder="Type here" class="form-control" id="couponMount" name="camount">
                                           <p id="err4" class="text-danger"></p>
                                       </div>
+                                      <div class="col-md-4  mb-3">
+                                        <label for="product_size" class="form-label">Maximum Purchase</label>
+                                        <input type="number" placeholder="Type here" class="form-control" id="couponMount2" name="camount">
+                                        <p id="err6" class="text-danger"></p>
+                                    </div>
                                       <div class="mb-4">
                                           <label for="product_title" class="form-label">Percentage</label>
                                           <input type="number" placeholder="Type here" class="form-control" id="CouponPercentage" name="cpercentage">
@@ -204,7 +209,6 @@
                           </div> 
                         
                       </div>
-                    
                   </div>
               </section>
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -246,6 +250,7 @@
      const Startdate = document.getElementById('couponSdate').value
      const Enddate = document.getElementById('couponEdate').value
      const MinimumAmount = document.getElementById('couponMount').value 
+     const MaximumAmount = document.getElementById('couponMount2').value
      const Percentage = document.getElementById('CouponPercentage').value 
 
         const existError = document.getElementById('exist')
@@ -254,6 +259,7 @@
         const startDateError = document.getElementById('err2')
         const endDateError = document.getElementById('err3')
         const minimumError = document.getElementById('err4')
+        const maximumError = document.getElementById('err6')
         const percentageError = document.getElementById('err5')
 
         existError.textContent = ""
@@ -262,6 +268,8 @@
         startDateError.textContent = ""
         endDateError.textContent = ""
         minimumError.textContent = ""
+        maximumError.textContent = ""
+
         percentageError.textContent = ""
 
         if(couponName === ""){
@@ -300,13 +308,19 @@
             minimumError.textContent = "Purchase amount should be a non-negative integer";
         }
 
+        if(MaximumAmount === ""){
+            maximumError.textContent = "The Amount is required";
+        }else if (!/^(0|[1-9]\d*)$/.test(MaximumAmount)){
+            maximumError.textContent = "Purchase amount should be a non-negative integer";
+        }
+
         if(Percentage === ""){
             percentageError.textContent = "The percentage is required"
         }else if(Percentage > 99){
             percentageError.textContent = "Percentage should not be greater 100"
         }
 
-        if(nameError.textContent!==''||startDateError.textContent!==''||endDateError.textContent!==''||minimumError.textContent!==''||percentageError.textContent!==''){
+        if(nameError.textContent!==''||startDateError.textContent!==''||endDateError.textContent!==''||minimumError.textContent!==''|| maximumError.textContent!== ''||percentageError.textContent!==''){
             
             fillError.textContent = "Enter fields"
             setTimeout(() => {
@@ -324,6 +338,7 @@
                         Startdate,
                         Enddate,
                         MinimumAmount,
+                        MaximumAmount,
                         Percentage
                   },
                   success:(response)=>{
