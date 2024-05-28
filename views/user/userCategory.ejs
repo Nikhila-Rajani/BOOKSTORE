@@ -578,7 +578,7 @@
                                 <div class="product-cart-wrap mb-30">
                                     <div class="product-img-action-wrap">
                                         <div class="product-img product-img-zoom">
-                                            <a href="/products?_id=<%= data[i]._id %>">
+                                            <a href="/detailedProduct?id=<%= data[i]._id %>">
                                                 <img class="default-img" src="/uploads/<%= data[i].image[0] %>" alt="">
                                                 <img class="hover-img" src="/uploads/<%= data[i].image[1] %>" alt="">
                                             </a>
@@ -592,9 +592,9 @@
                                     </div>
                                     <div class="product-content-wrap">
                                         <div class="product-category">
-                                            <a href="/products?_id=<%= data[i]._id %>"><%= data[i].pname %></a>
+                                            <a href="/detailedProduct?id=<%= data[i]._id %>"><%= data[i].pname %></a>
                                         </div>
-                                        <h2 class="title text-truncate"><a href="/products?_id=<%= data[i]._id %>"><%= data[i].description %></a></h2>
+                                        <h2 class="title text-truncate"><a href="/detailedProduct?id=<%= data[i]._id %>"><%= data[i].description %></a></h2>
                                         <div class="rating-result" title="90%">
                                             <!-- <span>
                                                 <span>90%</span>
@@ -698,7 +698,7 @@
                                     <img src="/uploads/<%= products[i].image[0] %>" alt="#">
                                 </div>
                                 <div class="content pt-10">
-                                    <h5><a href="/products?_id=<%= products[i]._id %>"><%= products[i].pname %></a></h5>
+                                    <h5><a href="/detailedProduct?id=<%= products[i]._id %>"><%= products[i].pname %></a></h5>
                                     <p class="price mb-0 mt-5">$<%= products[i].offprice  %></p>
                                     <div class="product-rate">
                                         <div class="product-rating" style="width:90%"></div>

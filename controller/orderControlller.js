@@ -127,7 +127,7 @@ const placeOrder = async (req,res) => {
 
 const orderSuccess = async(req,res)=>{
       try {
-            const findOrder = await Order
+           // const findOrder = await Order
             res.render('user/ordersuccess')
       } catch (error) {
             console.log(error.message);

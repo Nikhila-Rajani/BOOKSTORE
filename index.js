@@ -25,7 +25,8 @@ app.use(session({
 
 }))
 
-mongoose.connect("mongodb://localhost:27017/bookstore ");
+const MONGOATLASURI = process.env.MONGOATLASURI
+mongoose.connect(MONGOATLASURI);
 mongoose.connection.on("connected", () => {
       console.log("Connected to MongoDB");
     })

@@ -359,6 +359,7 @@
       <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
       <!-- Main Script -->
       <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 <script>
@@ -445,61 +446,78 @@
 
 
 
-     function previewImages() {
-    const input = document.getElementById('Pro_img');
-    const previewContainer = document.getElementById('imagePreviewContainer');
-    const files = input.files;
-
-    // Clear previous previews
-    previewContainer.innerHTML = '';
-
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-
-        reader.onload = (function(index) {
-            return function(e) {
-                const previewWrapper = document.createElement('div');
-                previewWrapper.classList.add('preview-wrapper');
-
-                const preview = document.createElement('img');
-                preview.src = e.target.result;
-                preview.classList.add('image-preview');
-                
-                const removeBtn = document.createElement('button');
-                removeBtn.innerText = 'x';
-                removeBtn.classList.add('remove-btn');
-                removeBtn.type = 'button'; // Ensure it does not submit a form if wrapped inside one.
-                removeBtn.onclick = function() {
-                    // Remove the preview and the file from the input
-                    removeFile(index);
-                    previewWrapper.remove();
-                };
-
-                previewWrapper.appendChild(preview);
-                previewWrapper.appendChild(removeBtn);
-                previewContainer.appendChild(previewWrapper);
-            };
-        })(i);
-
-        reader.readAsDataURL(file);
-    }
-}
-
-function removeFile(index) {
-    const dt = new DataTransfer();
-    const input = document.getElementById('Pro_img');
-    const { files } = input;
-
-    for (let i = 0; i < files.length; i++) {
-        if (index !== i) {
-            dt.items.add(files[i]);
+      function previewImages() {
+            const input = document.getElementById('Pro_img');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const files = input.files;
+        
+            // Clear previous previews
+            previewContainer.innerHTML = '';
+        
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+        
+                reader.onload = (function(index) {
+                    return function(e) {
+                        const previewWrapper = document.createElement('div');
+                        previewWrapper.classList.add('preview-wrapper');
+        
+                        const preview = document.createElement('img');
+                        preview.src = e.target.result;
+                        preview.classList.add('image-preview');
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.innerText = 'x';
+                        removeBtn.classList.add('remove-btn');
+                        removeBtn.type = 'button'; // Ensure it does not submit a form if wrapped inside one.
+                        removeBtn.onclick = function() {
+                            // Show SweetAlert confirmation
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: 'Do you want to remove this image?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes, delete it!',
+                                cancelButtonText: 'No, keep it'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Remove the preview and the file from the input
+                                    removeFile(index);
+                                    previewWrapper.remove();
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'Your image has been removed.',
+                                        'success'
+                                    )
+                                }
+                            });
+                        };
+        
+                        previewWrapper.appendChild(preview);
+                        previewWrapper.appendChild(removeBtn);
+                        previewContainer.appendChild(previewWrapper);
+                    };
+                })(i);
+        
+                reader.readAsDataURL(file);
+            }
         }
-    }
-
-    input.files = dt.files; // Set the new FileList to input
-}
-
+        
+        function removeFile(index) {
+            const dt = new DataTransfer();
+            const input = document.getElementById('Pro_img');
+            const { files } = input;
+        
+            for (let i = 0; i < files.length; i++) {
+                if (index !== i) {
+                    dt.items.add(files[i]);
+                }
+            }
+        
+            input.files = dt.files; // Set the new FileList to input
+        }
+        
 
 
 
