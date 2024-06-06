@@ -109,8 +109,10 @@ const editPro = async (req, res) => {
 const productBlock = async (req, res) => {
       try {
             const productData = req.query._id;
+
             const data = await Product.findByIdAndUpdate(productData, { is_blocked: true })
             res.redirect("/admin/adminProduct");
+
       } catch (error) {
             console.log(error);
 
@@ -132,26 +134,31 @@ const productUnblock = async (req, res) => {
 
 const deleteImage = async (req, res) => {
       try {
-            console.log("delete imail ndd tto");
-            const pid = req.body.id
-            const index = req.body.index
-            const prodata = await Product.findById(pid)
-            const imagedelete = prodata.image[index]
+            console.log("delete image request received");
+            const pid = req.body.id;
+            const index = req.body.in
+            const prodata = await Product.findById(pid);
+
+            if (prodata.image.length <= 1) {
+                  return res.json({ status: "error", message: "Cannot delete the only remaining image." });
+            }
+            const imagedelete = prodata.image[index];
             fs.unlink(imagedelete, (err) => {
                   if (err) {
-                        console.error();
+                        console.error("Error deleting the image file:", err);
                   } else {
-                        console.log('done');
+                        console.log('Image file deleted successfully');
                   }
-            })
-            prodata.image.splice(index)
-            await prodata.save()
-            res.json({ status: "delete" })
+            });
+            prodata.image.splice(index, 1);
+            await prodata.save();
 
+            res.json({ status: "delete", message: "Image deleted successfully." });
       } catch (err) {
-            console.log(err.message)
+
+            console.log(error.message)
       }
-}
+};
 
 
 

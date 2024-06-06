@@ -24,6 +24,9 @@ const userSchema = mongoose.Schema({
       referalcode:{
             type:String
       },
+      google_id:{
+            type:String
+      },
       is_blocked:{
             type:Boolean,
             default:false,

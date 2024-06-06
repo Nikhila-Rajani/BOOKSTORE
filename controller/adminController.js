@@ -351,7 +351,7 @@ const filteringDateRange = async (req, res) => {
                   createdAt: { $gte: startDate, $lte: endDate }
             });
 
-            res.json({ orders: filterData });
+            res.json({ orders: filterData ,heading:selectOption});
       } catch (err) {
             console.error("Error in filteringDateRange: ", err.message);
             res.status(500).send({ error: err.message });

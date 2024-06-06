@@ -19,29 +19,30 @@
       <!-- Template CSS -->
       <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
       <style>
+            .image-preview-container {
+                display: flex;
+                flex-wrap: wrap;
+            }
             .preview-wrapper {
-                  position: relative;
-                  display: inline-block;
-                  margin: 10px;
-              }
-              
-              .image-preview {
-                  width: 100px;
-                  height: 100px;
-                  border: 1px solid #ccc;
-              }
-              
-              .remove-btn {
-                  position: absolute;
-                  top: 0;
-                  right: 0;
-                  background: red;
-                  color: white;
-                  border: none;
-                  cursor: pointer;
-              }
-              
-      </style>
+                position: relative;
+                margin: 10px;
+            }
+            .image-preview {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+            }
+            .remove-btn {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                background-color: red;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+        </style>
 </head>
 
 <body>
@@ -257,26 +258,19 @@
                                     <div class="row">
                                           <div class="col-lg-12">
                                                 <div class="card mb-4">
-                                                      <div class="card-header">
-                                                            <h4>Media</h4>
-                                                      </div>
-                                                      <div class="card-body">
-
-                                                            <div class="input-upload">
-                                                                  <label for="Pro_img" class="form-label">Upload
-                                                                        Images</label>
-                                                                  <input class="form-control" name="image" type="file"
-                                                                        id="Pro_img" multiple
-                                                                        onchange="previewImages()">
-                                                                  <div id="imagePreviewContainer"
-                                                                        class="image-preview-container"></div>
-                                                                  <p class="text-danger text-center mb-15 mt-15"
-                                                                        id="imageError"></p>
-                                                            </div>
-                                                      </div>
-                                                </div> 
-                                          </div>
-
+                                                    <div class="card-header">
+                                                        <h4>Media</h4>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="input-upload">
+                                                            <label for="Pro_img" class="form-label">Upload Images</label>
+                                                            <input class="form-control" name="image" type="file" id="Pro_img" multiple onchange="previewImages()">
+                                                            <div id="imagePreviewContainer" class="image-preview-container"></div>
+                                                            <p class="text-danger text-center mb-15 mt-15" id="imageError"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                
                                           <div class="col-lg-12">
                                                 <div class="card mb-4">
@@ -446,63 +440,69 @@
 
 
 
-      function previewImages() {
-            const input = document.getElementById('Pro_img');
-            const previewContainer = document.getElementById('imagePreviewContainer');
-            const files = input.files;
-        
-            // Clear previous previews
-            previewContainer.innerHTML = '';
-        
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-        
-                reader.onload = (function(index) {
-                    return function(e) {
-                        const previewWrapper = document.createElement('div');
-                        previewWrapper.classList.add('preview-wrapper');
-        
-                        const preview = document.createElement('img');
-                        preview.src = e.target.result;
-                        preview.classList.add('image-preview');
-                        
-                        const removeBtn = document.createElement('button');
-                        removeBtn.innerText = 'x';
-                        removeBtn.classList.add('remove-btn');
-                        removeBtn.type = 'button'; // Ensure it does not submit a form if wrapped inside one.
-                        removeBtn.onclick = function() {
-                            // Show SweetAlert confirmation
-                            Swal.fire({
-                                title: 'Are you sure?',
-                                text: 'Do you want to remove this image?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonText: 'Yes, delete it!',
-                                cancelButtonText: 'No, keep it'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Remove the preview and the file from the input
-                                    removeFile(index);
-                                    previewWrapper.remove();
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'Your image has been removed.',
-                                        'success'
-                                    )
-                                }
-                            });
-                        };
-        
-                        previewWrapper.appendChild(preview);
-                        previewWrapper.appendChild(removeBtn);
-                        previewContainer.appendChild(previewWrapper);
-                    };
-                })(i);
-        
-                reader.readAsDataURL(file);
-            }
+      let selectedFiles = [];
+
+    function previewImages() {
+        const input = document.getElementById('Pro_img');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const files = input.files;
+
+        for (let i = 0; i < files.length; i++) {
+            selectedFiles.push(files[i]);
         }
+
+        // Clear previous previews
+        previewContainer.innerHTML = '';
+
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const previewWrapper = document.createElement('div');
+                previewWrapper.classList.add('preview-wrapper');
+
+                const preview = document.createElement('img');
+                preview.src = e.target.result;
+                preview.classList.add('image-preview');
+
+                const removeBtn = document.createElement('button');
+                removeBtn.innerText = 'x';
+                removeBtn.classList.add('remove-btn');
+                removeBtn.type = 'button';
+                removeBtn.onclick = function () {
+                    // Show SweetAlert confirmation
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'Do you want to remove this image?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'No, keep it'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Remove the preview and the file from the selectedFiles array
+                            selectedFiles.splice(index, 1);
+                            previewWrapper.remove();
+                            Swal.fire(
+                                'Deleted!',
+                                'Your image has been removed.',
+                                'success'
+                            );
+                        }
+                    });
+                };
+
+                previewWrapper.appendChild(preview);
+                previewWrapper.appendChild(removeBtn);
+                previewContainer.appendChild(previewWrapper);
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        // Clear the input value to allow re-uploading the same file if needed
+        input.value = '';
+    }
         
         function removeFile(index) {
             const dt = new DataTransfer();
