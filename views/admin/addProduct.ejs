@@ -501,7 +501,7 @@
         });
 
         // Clear the input value to allow re-uploading the same file if needed
-        input.value = '';
+        input.value = selectedFiles;
     }
         
         function removeFile(index) {
@@ -526,9 +526,10 @@
             const fileInput = document.getElementById('Pro_img');
             const imageError = document.getElementById('imageError');
             const allowedExtensions = ['jpg', 'jpeg', 'png'];
+            console.log(selectedFiles)
         
             // Check if no file is selected
-            if (fileInput.files.length === 0) {
+            if (selectedFiles.length === 0) {
                 imageError.textContent = 'Image is required';
                 return false;
             } else {
@@ -536,7 +537,7 @@
             }
         
             // Check each file for its extension
-            for (const file of fileInput.files) {
+            for (const file of selectedFiles) {
                 const fileExtension = file.name.split('.').pop().toLowerCase();
                 if (!allowedExtensions.includes(fileExtension)) {
                     imageError.textContent = 'Invalid file format. Please upload JPEG or PNG files.';

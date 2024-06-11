@@ -1,6 +1,8 @@
 const Product = require("../model/ProductModel");
 const Category = require("../model/CategoryModel")
-const fs = require('fs')
+const fs = require('fs');
+const sharp = require("sharp");
+const path = require('path');
 
 
 const loadAddpro = async (req, res) => {
@@ -13,36 +15,51 @@ const loadAddpro = async (req, res) => {
 
       }
 }
-
 const addProduct = async (req, res) => {
       try {
-            const { product_name, product_des, regprice, offprice, catName, stock } = req.body
-
-            const cat = await Category.findOne({ _id: catName });
-            const imageName = req.files.map((x) => x.originalname);
-
-            const product = new Product({
-                  name: product_name,
-                  discription: product_des,
-                  regularPrice: regprice,
-                  offerPrice: offprice,
-                  image: imageName,
-                  stock: stock,
-                  category: cat._id,
-                  is_blocked: false
-
-            });
-            const proData = await product.save();
-            res.redirect('/admin/adminproduct')
-
-
-
+          const { product_name, product_des, regprice, offprice, catName, stock } = req.body;
+  
+          
+          const cat = await Category.findOne({ _id: catName });
+          if (!req.files || req.files.length === 0) {
+              return res.status(400).send('No files uploaded');
+          }
+  
+          const croppedImages = [];
+  
+          for (const file of req.files) {
+              try {
+                  const originalPath = file.path;
+                  const outputFileName = `cropped_${Date.now()}.jpeg`;
+                  const outputPath = `public/uploads/${outputFileName}`;
+                  await sharp(originalPath).resize(500, 700).toFile(outputPath);
+  
+                  croppedImages.push(outputFileName);
+              } catch (error) {
+                  console.error('Error processing image:', error);
+              }
+          }
+  
+          // Create new product
+          const product = new Product({
+              name: product_name,
+              discription: product_des,
+              regularPrice: regprice,
+              offerPrice: offprice,
+              image: croppedImages,
+              stock: stock,
+              category: cat._id,
+              is_blocked: false
+          });
+  
+          const proData = await product.save();
+          res.redirect('/admin/adminproduct');
       } catch (error) {
-            console.log(error);
-
+          console.error('Error adding product:', error);
       }
-}
-
+  };
+  
+  
 // loading edit product page;
 
 const editProduct = async (req, res) => {
