@@ -85,7 +85,7 @@ const deleteWishlist = async (req,res) =>{
 
 }
 
-///// adding wishlist into Cart //////
+
 
  
 
