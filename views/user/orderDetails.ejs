@@ -243,6 +243,22 @@
                                                           </tbody>
                                                       </table>
                                                   </div>
+                                                  <div class="pagination-area mt-30 mb-50">
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination justify-content-start">
+                                    
+                                                            <% for( let i=1; i <=numofPage; i++ ) { %>
+                                                                <li class="page-item "><a class="page-link" href="/orderDetails?page=<%= i %>">
+                                                                        <%= i %>
+                                                                    </a></li>
+                                    
+                                    
+                                                                <% } %>
+                                    
+                                                        </ul>
+                                                    </nav>
+                                                </div> 
+                                                
                                               </div>
                                           </div>
                                       </div>

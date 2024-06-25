@@ -19,6 +19,9 @@
       <!-- Template CSS -->
       <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
       <style>
+
+          
+              
             .image-preview-container {
                 display: flex;
                 flex-wrap: wrap;
@@ -42,6 +45,8 @@
                 border-radius: 50%;
                 cursor: pointer;
             }
+
+
         </style>
 </head>
 
@@ -264,7 +269,7 @@
                                                     <div class="card-body">
                                                         <div class="input-upload">
                                                             <label for="Pro_img" class="form-label">Upload Images</label>
-                                                            <input class="form-control" name="image" type="file" id="Pro_img" multiple onchange="previewImages()">
+                                                            <input class="form-control" name="image" type="file" id="Pro_img" multiple onchange="previewImages()" onblur="validateImages()">
                                                             <div id="imagePreviewContainer" class="image-preview-container"></div>
                                                             <p class="text-danger text-center mb-15 mt-15" id="imageError"></p>
                                                         </div>
@@ -279,26 +284,6 @@
                                                       </div>
                                                       <div class="card-body">
                                                             <div class="row gx-2">
-                                                                  <!-- <div class="col-sm-6 mb-3">
-                                                <label class="form-label">Category</label>
-                                                <select class="form-select">
-                                                    <option> Automobiles </option>
-                                                    <option> Home items </option>
-                                                    <option> Electronics </option>
-                                                    <option> Smartphones </option>
-                                                    <option> Sport items </option>
-                                                    <option> Baby and Toys </option>
-                                                </select>
-                                            </div> -->
-                                                                  <!-- <div class="col-sm-6 mb-3">
-                                                <label class="form-label">Sub-category</label>
-                                                <select class="form-select">
-                                                    <option> Nissan </option>
-                                                    <option> Honda </option>
-                                                    <option> Mercedes </option>
-                                                    <option> Chevrolet </option>
-                                                </select>
-                                            </div> -->
                                                                   <div class="mb-4">
                                                                         <label for="product_name"
                                                                               class="form-label">Stock</label>
@@ -328,23 +313,6 @@
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
-
-            <!-- <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-                    document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
-                    </div>
-                </div>
-            </div>
-        </footer> -->
       </main>
       <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
       <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>

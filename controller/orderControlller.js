@@ -138,12 +138,18 @@ const orderSuccess = async(req,res)=>{
 
 const orderDetails = async(req,res)=>{
       try {
+            const page = req.query.page;
+            const pageSize = 10;
+            const pdtskip = (page-1) * pageSize
+            const odCount = await Order.find({}).count();
+            const numofPage = Math.ceil(odCount / pageSize);
+
             const user = req.session.user
             const userData = await User.findOne({_id:user._id});
             // console.log("userem kitti",userData);
-            const order = await Order.find({user:userData.email})
+            const order = await Order.find({user:userData.email}).skip(pdtskip).limit(pageSize).sort({date:-1})
             // console.log("Order kitti tto",order);
-            res.render('user/orderDetails',{order})
+            res.render('user/orderDetails',{order,numofPage})
             
       } catch (error) {
             console.log(error.message);

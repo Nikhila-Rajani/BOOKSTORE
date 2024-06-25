@@ -153,13 +153,14 @@ const deleteImage = async (req, res) => {
       try {
             console.log("delete image request received");
             const pid = req.body.id;
-            const index = req.body.in
+            const index = req.body.index
             const prodata = await Product.findById(pid);
 
             if (prodata.image.length <= 1) {
                   return res.json({ status: "error", message: "Cannot delete the only remaining image." });
             }
-            const imagedelete = prodata.image[index];
+             const imagedelete = prodata.image[index];
+
             fs.unlink(imagedelete, (err) => {
                   if (err) {
                         console.error("Error deleting the image file:", err);
@@ -173,7 +174,7 @@ const deleteImage = async (req, res) => {
             res.json({ status: "delete", message: "Image deleted successfully." });
       } catch (err) {
 
-            console.log(error.message)
+            console.log(err.message)
       }
 };
 

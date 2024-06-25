@@ -38,7 +38,7 @@ const addtoCart = async(req,res)=>{
                   // console.log('kiiiii');
                   const cartData = await Cart.findOne({user:userData})
                   if(cartData){
-                        console.log("kerittind");
+                        //console.log("kerittind");
                         const findProduct = await Cart.findOne({user:userData,'products.productId':proId})
                         // console.log('vannuu...gooys',findProduct);
                         if(findProduct){
@@ -114,10 +114,15 @@ const addtoCart = async(req,res)=>{
 
                               }
 
-                        }else{
+                        }else if(element.quantity >= stock){
+                              console.log("Stock limit exceeded");
+                              res.json({status:"Warning"})
+
+                        } else{
                               console.log('out of stock');
                               res.json({status:"Outofstock"})
                         }
+                         
                   }  
             })
             await findCart.save()

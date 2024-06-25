@@ -747,7 +747,30 @@
                         },
                         iconColor: "#3F2520"
                         });
-                }else if(response.status === "outofStock"){
+                }else if(response.status == "Warning"){
+                    Swal.fire({
+                        title: "Stock shortage",
+                        icon: "warning",
+                        customClass: {
+                            confirmButton: 'black-ok-button'
+                        },
+                        showClass: {
+                            popup: `
+                            animate__animated
+                            animate__fadeInUp
+                            animate__faster
+                            `
+                        },
+                        hideClass: {
+                            popup: `
+                            animate__animated
+                            animate__fadeOutDown
+                            animate__faster
+                            `
+                        },
+                        iconColor: "#3F2520"
+                        });
+                }else if(response.status == "outofStock"){
                     Swal.fire({
                         title: "Out Of Stock",
                         icon: "warning",
@@ -771,6 +794,8 @@
                         iconColor: "#3F2520"
                         });
                 }
+                
+                
             }
 
         })

@@ -315,6 +315,7 @@ function previewImages() {
 </script> 
 <script>
     function deleteImage(id, index) {
+       
         // Confirm before deleting the image
         Swal.fire({
             title: 'Are you sure?',
@@ -326,7 +327,6 @@ function previewImages() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Proceed with the AJAX call if confirmed
                 $.ajax({
                     url: "/admin/deleteimage",
                     method: "post",
@@ -343,7 +343,6 @@ function previewImages() {
                                 showConfirmButton: false,
                                 timer: 1500
                             }).then(() => {
-                                // Reload after the Swal message to show updated state
                                 window.location.reload();
                             });
                         } else if (response.status === "error") {
