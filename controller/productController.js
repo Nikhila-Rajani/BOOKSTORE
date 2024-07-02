@@ -17,24 +17,34 @@ const loadAddpro = async (req, res) => {
 }
 const addProduct = async (req, res) => {
       try {
-          const { product_name, product_des, regprice, offprice, catName, stock } = req.body;
+          const { product_name, product_des, regprice, offprice, catName, stock , cropvaluesimg1 ,cropvaluesimg2 , cropvaluesimg3 , cropvaluesimg4} = req.body;
   
-          
+         
           const cat = await Category.findOne({ _id: catName });
           if (!req.files || req.files.length === 0) {
               return res.status(400).send('No files uploaded');
           }
-  
+          const cropped1 = cropvaluesimg1 ? JSON.parse(cropvaluesimg1) : null;
+          const cropped2 = cropvaluesimg2 ? JSON.parse(cropvaluesimg2) : null;
+          const cropped3 = cropvaluesimg3 ? JSON.parse(cropvaluesimg3) : null;
+          const cropped4 = cropvaluesimg4 ? JSON.parse(cropvaluesimg4) : null;
+
+          let cropvalues = [cropped1,cropped2,cropped3,cropped4]
           const croppedImages = [];
-  
+          let i = 0;
           for (const file of req.files) {
               try {
+                  const x = cropvalues[i]?.x ? Math.floor(cropvalues[i]?.x) : 500;
+                  const y = cropvalues[i]?.y ? Math.floor(cropvalues[i]?.y) : 700;
+                  const width = cropvalues[i]?.width ? Math.floor(cropvalues[i]?.width) : 500;
+                  const height = cropvalues[i]?.height ? Math.floor(cropvalues[i]?.height) : 700;
                   const originalPath = file.path;
                   const outputFileName = `cropped_${Date.now()}.jpeg`;
                   const outputPath = `public/uploads/${outputFileName}`;
-                  await sharp(originalPath).resize(500, 700).toFile(outputPath);
+                  await sharp(originalPath).extract({ left: x, top: y, width: width, height: height }).resize(width, height).toFile(outputPath);
   
                   croppedImages.push(outputFileName);
+                  i++;
               } catch (error) {
                   console.error('Error processing image:', error);
               }
@@ -177,18 +187,6 @@ const deleteImage = async (req, res) => {
             console.log(err.message)
       }
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

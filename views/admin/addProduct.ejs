@@ -18,6 +18,8 @@
       <link rel="shortcut icon" type="image/x-icon" href="/admin-assets/imgs/theme/favicon.svg">
       <!-- Template CSS -->
       <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" integrity="sha512-hvNR0F/e2J7zPPfLC9auFe3/SE0yG4aJCOd/qxew74NN7eyiSKjr7xJJMu1Jy2wf7FXITpWS1E/RY8yzuXN7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" integrity="sha512-9KkIqdfN7ipEW6B6k+Aq20PV31bjODg4AA52W+tYtAE0jE0kMx49bjJ3FgvS56wzmyfMUHbQ4Km2b7l9+Y/+Eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
       <style>
 
           
@@ -45,7 +47,117 @@
                 border-radius: 50%;
                 cursor: pointer;
             }
-
+            mainimgoverlay{
+                  top: 0;
+                  left: 0;
+                  opacity: 20%;
+                  z-index: 5;
+                  width: 100%;
+                  height: 100%;
+                  position: fixed;
+                  background-color: #313131;
+              }
+              .modalformain{
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.404);
+                  position: fixed;
+                  top: 20%;
+                  left: 20%;
+                  z-index: 6;
+                  width: 60%;
+                  height: 60%;
+                  border-radius: 20px;
+                  opacity: 1;
+                  background-color: white;
+                  gap: 5px;
+              }
+              
+              .modalformain img{
+                  display: block;
+                  width: auto;
+                  height: 100%;
+                  object-fit: contain;
+              }
+              .modalformain button{
+                  padding: 5px 15px;
+                  background: none;
+                  border: 1px solid #ff3f00;
+                  border-radius: 5px;
+              }
+              .imgmain{
+                  background-color: #313131;
+                  overflow: hidden;
+                  width: 70%;
+                  height: 70%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+              }
+              .buttonmain{
+                  height: 2rem;
+              }
+              
+              #maincropbtn {
+                  padding: 3px 11px;
+                  font-size: 0.8rem;
+                  background: white;
+                  border: 1px solid #ff3f00;
+                  border-radius: 5px;
+                  position: absolute;
+                  bottom: 0;
+                  left: 15%;
+              }
+              #imgcropbtn1{
+                  padding: 3px 11px;
+                  font-size: 0.8rem;
+                  background: white;
+                  border: 1px solid #ff3f00;
+                  border-radius: 5px;
+                  position: absolute;
+                  bottom: 0;
+                  left: 7%; 
+              }
+              #imgcropbtn2{
+                  padding: 3px 11px;
+                  font-size: 0.8rem;
+                  background: white;
+                  border: 1px solid #ff3f00;
+                  border-radius: 5px;
+                  position: absolute;
+                  bottom: 0;
+                  left: 30%; 
+              }
+              #imgcropbtn3{
+                  padding: 3px 11px;
+                  font-size: 0.8rem;
+                  background: white;
+                  border: 1px solid #ff3f00;
+                  border-radius: 5px;
+                  position: absolute;
+                  bottom: 0;
+                  left: 52%; 
+              }
+              #imgcropbtn4{
+                  padding: 3px 11px;
+                  font-size: 0.8rem;
+                  background: white;
+                  border: 1px solid #ff3f00;
+                  border-radius: 5px;
+                  position: absolute;
+                  bottom: 0;
+                  left: 75%; 
+              }
+              .closecrop{
+                  position: absolute;
+                  font-size: 2rem;
+                  top: 15px;
+                  right: 15px;
+                  border: none !important;
+                  padding: 0 !important;
+              }
 
         </style>
 </head>
@@ -74,12 +186,6 @@
                                           class="icon material-icons md-shopping_bag"></i>
                                     <span class="text">Products</span>
                               </a>
-                              <!-- <div class="submenu">
-                        <a href="page-products-list.html">Product List</a>
-                        <a href="page-products-grid.html">Product grid</a>
-                        <a href="page-products-grid-2.html">Product grid 2</a>
-                        <a href="page-categories.html">Categories</a>
-                    </div> -->
                         </li>
                         <li class="">
                               <a class="menu-link" href="adminCategory"> <i
@@ -195,6 +301,9 @@
                                     <div class="content-header">
                                           <h2 class="content-title">Add New Product</h2>
                                     </div>
+                                    <% if(locals.error){ %>
+                                          <p class="alert alert-danger"><%= locals.error %></p>
+                                    <% } %>
                                     <div class="card mb-4">
                                           <div class="card-header">
                                                 <h4>Basic</h4>
@@ -270,6 +379,10 @@
                                                         <div class="input-upload">
                                                             <label for="Pro_img" class="form-label">Upload Images</label>
                                                             <input class="form-control" name="image" type="file" id="Pro_img" multiple onchange="previewImages()" onblur="validateImages()">
+                                                            <input type="hidden" id="cropvaluesimg1" name="cropvaluesimg1" >
+                                                            <input type="hidden" id="cropvaluesimg2" name="cropvaluesimg2" >
+                                                            <input type="hidden" id="cropvaluesimg3" name="cropvaluesimg3" >
+                                                            <input type="hidden" id="cropvaluesimg4" name="cropvaluesimg4" >
                                                             <div id="imagePreviewContainer" class="image-preview-container"></div>
                                                             <p class="text-danger text-center mb-15 mt-15" id="imageError"></p>
                                                         </div>
@@ -302,6 +415,8 @@
                               </div>
                         </div>
                   </div>
+                  <div class="mainimgoverlay" id="mainimageoverlay" style="display: none;"></div>
+                  <div id="mainimagemodal" class="modalformain" style="display: none;"><div class="imgmain"><img src="" id="mainmodimg" alt=""></div><div class="buttonmain"><button type="button" id="cropsavebtn" style="display: none;">CROP</button><button type="button" id="cropsavebtn1" style="display: none;">CROP</button><button type="button" id="cropsavebtn2" style="display: none;">CROP</button><button type="button" id="cropsavebtn3" style="display: none;">CROP</button><button type="button" id="cropsavebtn4" style="display: none;">CROP</button></div><button class="closecrop">&times;</button></div>
                   <div style="padding-left:190px;">
                         <input class="btn btn-light rounded font-sm mr-5 text-body hover-up" type="submit" value="ADD">
 
@@ -325,7 +440,7 @@
 </body>
 
 <script>
-
+      const previewContainer = document.getElementById('imagePreviewContainer');
       function nameFun() {
        
             const name = document.getElementById("product_name").value.trim();
@@ -412,7 +527,6 @@
 
     function previewImages() {
         const input = document.getElementById('Pro_img');
-        const previewContainer = document.getElementById('imagePreviewContainer');
         const files = input.files;
 
         for (let i = 0; i < files.length; i++) {
@@ -431,6 +545,7 @@
 
                 const preview = document.createElement('img');
                 preview.src = e.target.result;
+                preview.id = `img${index+1}`
                 preview.classList.add('image-preview');
 
                 const removeBtn = document.createElement('button');
@@ -467,7 +582,7 @@
 
             reader.readAsDataURL(file);
         });
-
+        loadMain1()
         // Clear the input value to allow re-uploading the same file if needed
         input.value = selectedFiles;
     }
@@ -517,6 +632,130 @@
             return true;
         }
         
+        function loadMain1(){   
+            let cropper1;
+            for(let i = 0 ; i < selectedFiles.length ; i++){
+                  const imgcrop = document.createElement('button')
+                  imgcrop.type = "button"
+                  imgcrop.innerHTML = "CROP"
+                  imgcrop.id = `imgcropbtn${i+1}`
+                  imgcrop.classList.add = 'imgcrop'
+                  previewContainer.appendChild(imgcrop)
+            }
+
+            function saveImgData(){
+            
+                  document.getElementById('mainimageoverlay').style.display = 'none'
+                  document.getElementById('mainimagemodal').style.display = 'none'
+                  if(document.getElementById('cropsavebtn1')){
+                        document.getElementById('cropsavebtn1').style.display = 'none'
+                  }
+                  if(document.getElementById('cropsavebtn2')){
+                        document.getElementById('cropsavebtn2').style.display = 'none'
+                  }
+                  if(document.getElementById('cropsavebtn3')){
+                        document.getElementById('cropsavebtn3').style.display = 'none'
+                  }
+                  if(document.getElementById('cropsavebtn4')){
+                        document.getElementById('cropsavebtn4').style.display = 'none'
+                  }
+
+            }
+            function cropperInit(){
+                  if(cropper1){
+                        cropper1.destroy()
+                  }
+                  cropper1 = new Cropper(mainmodimg,{
+                        aspectRatio:2/3,
+                        viewMode:2,
+                        scalable:false
+                  })
+                  return cropper1
+            }
+            const cropvaluesimg1 = document.getElementById('cropvaluesimg1')
+            const cropvaluesimg2 = document.getElementById('cropvaluesimg2')
+            const cropvaluesimg3 = document.getElementById('cropvaluesimg3')
+            const cropvaluesimg4 = document.getElementById('cropvaluesimg4')
+
+            const imgcropbtn1 = document.getElementById('imgcropbtn1')
+            imgcropbtn1.addEventListener('click',()=>{
+
+                  mainmodimg.src = document.getElementById('img1').src
+                  document.getElementById('mainimageoverlay').style.display = 'block'
+                  document.getElementById('mainimagemodal').style.display = 'flex'
+                  document.getElementById('cropsavebtn1').style.display = 'block'
+                  const crop = cropperInit()
+                  document.getElementById('cropsavebtn1').addEventListener('click',()=>{
+                  document.getElementById('img1').src = crop.getCroppedCanvas().toDataURL()
+                  cropvaluesimg1.value = JSON.stringify(crop.getData())
+                  saveImgData()
+                  
+            })
+
+            })
+            const imgcropbtn2 = document.getElementById('imgcropbtn2')
+            imgcropbtn2.addEventListener('click',()=>{
+                  mainmodimg.src = document.getElementById('img2').src
+                  document.getElementById('mainimageoverlay').style.display = 'block'
+                  document.getElementById('mainimagemodal').style.display = 'flex'
+                  document.getElementById('cropsavebtn2').style.display = 'block'
+                  const crop = cropperInit()
+                  document.getElementById('cropsavebtn2').addEventListener('click',()=>{
+                        document.getElementById('img2').src = crop.getCroppedCanvas().toDataURL()
+                        cropvaluesimg2.value = JSON.stringify(crop.getData())
+                        saveImgData()})
+
+            })
+            const imgcropbtn3 = document.getElementById('imgcropbtn3')
+            imgcropbtn3.addEventListener('click',()=>{
+                  mainmodimg.src = document.getElementById('img3').src
+                  document.getElementById('mainimageoverlay').style.display = 'block'
+                  document.getElementById('mainimagemodal').style.display = 'flex'
+                  document.getElementById('cropsavebtn3').style.display = 'block'
+                  const crop = cropperInit()
+                  document.getElementById('cropsavebtn3').addEventListener('click',()=>{
+                        document.getElementById('img3').src = crop.getCroppedCanvas().toDataURL()
+                        cropvaluesimg3.value = JSON.stringify(crop.getData())
+                        saveImgData()})
+
+            })
+            const imgcropbtn4 = document.getElementById('imgcropbtn4')
+            imgcropbtn4.addEventListener('click',()=>{
+                  mainmodimg.src = document.getElementById('img4').src
+                  document.getElementById('mainimageoverlay').style.display = 'block'
+                  document.getElementById('mainimagemodal').style.display = 'flex'
+                  document.getElementById('cropsavebtn4').style.display = 'block'
+                  const crop = cropperInit()
+                  document.getElementById('cropsavebtn4').addEventListener('click',()=>{
+                        document.getElementById('img4').src = crop.getCroppedCanvas().toDataURL()
+                        cropvaluesimg4.value = JSON.stringify(crop.getData())
+                        saveImgData()})
+
+            })
+            document.querySelectorAll('.closecrop').forEach(el=>{
+                  el.addEventListener('click',()=>{
+                        mainmodimg.src = ""
+                        document.getElementById('mainimageoverlay').style.display = 'none'
+                        document.getElementById('mainimagemodal').style.display = 'none'
+                        if(document.getElementById('cropsavebtn1')){
+                        document.getElementById('cropsavebtn1').style.display = 'none'
+                        }
+                        if(document.getElementById('cropsavebtn2')){
+                        document.getElementById('cropsavebtn2').style.display = 'none'
+                        }
+                        if(document.getElementById('cropsavebtn3')){
+                        document.getElementById('cropsavebtn3').style.display = 'none'
+                        }
+                        if(document.getElementById('cropsavebtn4')){
+                        document.getElementById('cropsavebtn4').style.display = 'none'
+                        }
+                  })
+            })
+            }
+            
+
+
+
 
 
 

@@ -147,7 +147,7 @@ const orderDetails = async(req,res)=>{
             const user = req.session.user
             const userData = await User.findOne({_id:user._id});
             // console.log("userem kitti",userData);
-            const order = await Order.find({user:userData.email}).skip(pdtskip).limit(pageSize).sort({date:-1})
+            const order = await Order.find({user:userData.email}).sort({createdAt:-1}).skip(pdtskip).limit(pageSize)
             // console.log("Order kitti tto",order);
             res.render('user/orderDetails',{order,numofPage})
             

@@ -29,7 +29,14 @@ router.post('/block-unblock', middleware.isAdmin, categoryController.blockunbloc
 /////////////Product////////////////////////////////////
 
 router.get('/addProduct', middleware.isAdmin, productController.loadAddpro);
-router.post('/addProduct', middleware.isAdmin, upload.array('image'), productController.addProduct);
+router.post('/addProduct', middleware.isAdmin, (req, res, next) => {
+      upload.array('image')(req, res, function (err) {
+       if (err) {
+          return res.render('admin/addProduct',{ error: err.message });
+        }
+        next();
+      });
+    }, productController.addProduct);
 router.get('/productUnblock', middleware.isAdmin, productController.productUnblock)
 router.get('/productBlock', middleware.isAdmin, productController.productBlock);
 router.get('/editProduct', middleware.isAdmin, productController.editProduct);

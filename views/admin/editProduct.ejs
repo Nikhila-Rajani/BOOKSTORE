@@ -200,6 +200,7 @@
                             </div>
                         </div>
                         
+                        
                     </div><div class="col-lg-3"style="margin-top: 74px;" >
                         <div class="card mb-4">
                             <div class="card-header">
@@ -216,7 +217,19 @@
                                         
                                     </div>  
                                     <% } %>
-                                   
+                                    <div class="col-lg-12">
+                                        <div class="card mb-4">
+                                          
+                                            <div class="card-body">
+                                                <div class="input-upload">
+                                                    <label for="Pro_img" class="form-label">Upload Images</label>
+                                                    <input class="form-control" name="image" type="file" id="Pro_img" multiple onchange="previewImages()" onblur="validateImages()">
+                                                    <div id="imagePreviewContainer" class="image-preview-container"></div>
+                                                    <p class="text-danger text-center mb-15 mt-15" id="imageError"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                    
                         </div> 
                         <div class="d-grid">
@@ -287,27 +300,7 @@
 
 
 
-function previewImages() {
-      const input = document.getElementById('Pro_img');
-      const previewContainer = document.getElementById('imagePreviewContainer');
-      const files = input.files;
 
-      // Clear previous previews
-      previewContainer.innerHTML = '';
-
-      for (const file of files) {
-          const reader = new FileReader();
-
-          reader.onload = function (e) {
-              const preview = document.createElement('img');
-              preview.src = e.target.result;
-              preview.classList.add('image-preview');
-              previewContainer.appendChild(preview);
-          };
-
-          reader.readAsDataURL(file);
-      }
-  }
 
 
 
@@ -466,28 +459,108 @@ function previewImages() {
 
 
 
+      let selectedFiles = [];
+
+      function previewImages() {
+          const input = document.getElementById('Pro_img');
+          const previewContainer = document.getElementById('imagePreviewContainer');
+          const files = input.files;
+  
+          for (let i = 0; i < files.length; i++) {
+              selectedFiles.push(files[i]);
+          }
+  
+          // Clear previous previews
+          previewContainer.innerHTML = '';
+  
+          selectedFiles.forEach((file, index) => {
+              const reader = new FileReader();
+  
+              reader.onload = function (e) {
+                  const previewWrapper = document.createElement('div');
+                  previewWrapper.classList.add('preview-wrapper');
+  
+                  const preview = document.createElement('img');
+                  preview.src = e.target.result;
+                  preview.classList.add('image-preview');
+  
+                  const removeBtn = document.createElement('button');
+                  removeBtn.innerText = 'x';
+                  removeBtn.classList.add('remove-btn');
+                  removeBtn.type = 'button';
+                  removeBtn.onclick = function () {
+                      // Show SweetAlert confirmation
+                      Swal.fire({
+                          title: 'Are you sure?',
+                          text: 'Do you want to remove this image?',
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonText: 'Yes, delete it!',
+                          cancelButtonText: 'No, keep it'
+                      }).then((result) => {
+                          if (result.isConfirmed) {
+                              // Remove the preview and the file from the selectedFiles array
+                              selectedFiles.splice(index, 1);
+                              previewWrapper.remove();
+                              Swal.fire(
+                                  'Deleted!',
+                                  'Your image has been removed.',
+                                  'success'
+                              );
+                          }
+                      });
+                  };
+  
+                  previewWrapper.appendChild(preview);
+                  previewWrapper.appendChild(removeBtn);
+                  previewContainer.appendChild(previewWrapper);
+              };
+  
+              reader.readAsDataURL(file);
+          });
+  
+          // Clear the input value to allow re-uploading the same file if needed
+          input.value = selectedFiles;
+      }
+          
+          function removeFile(index) {
+              const dt = new DataTransfer();
+              const input = document.getElementById('Pro_img');
+              const { files } = input;
+          
+              for (let i = 0; i < files.length; i++) {
+                  if (index !== i) {
+                      dt.items.add(files[i]);
+                  }
+              }
+          
+              input.files = dt.files; // Set the new FileList to input
+          }
+          
 
 
-
-      function validateImages() {
+          function validateImages() {
             const fileInput = document.getElementById('Pro_img');
             const imageError = document.getElementById('imageError');
             const allowedExtensions = ['jpg', 'jpeg', 'png'];
-
-            if(fileInput.length!=5){
-                  document.getElementById("imageError").innerHTML="Image is require"
-            }else{
-                  document.getElementById("imageError").innerHTML=""
+            console.log(selectedFiles)
+        
+            // Check if no file is selected
+            
+        
+            // Check each file for its extension
+            for (const file of selectedFiles) {
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                if (!allowedExtensions.includes(fileExtension)) {
+                    imageError.textContent = 'Invalid file format. Please upload JPEG or PNG files.';
+                    return false;
+                }
             }
-
-            for (const file of fileInput.files) {
-                  const fileExtension = file.name.split('.').pop().toLowerCase();
-                  if (!allowedExtensions.includes(fileExtension)) {
-                        imageError.textContent = 'Invalid file format. Please upload JPEG or PNG files.';
-                        return false;
-                  }
-            }
-      }
+        
+            // All files have valid extensions
+            return true;
+        }
+        
 
 
      
