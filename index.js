@@ -3,6 +3,8 @@ const nocache = require("nocache");
 const path = require('path');
 const session = require('express-session');
 require('dotenv').config();
+const passport = require('passport')
+require('./config/passport')
 
 const app = express();
  
@@ -25,6 +27,7 @@ app.use(session({
 
 }))
 
+
 const MONGOATLASURI = process.env.MONGOATLASURI
 mongoose.connect(MONGOATLASURI);
 mongoose.connection.on("connected", () => {
@@ -39,6 +42,8 @@ mongoose.connection.on("connected", () => {
       console.log("Disconnected from MongoDB");
     })
     
+    app.use(passport.initialize())
+    app.use(passport.session())
 
 app.use("/", nocache());
 

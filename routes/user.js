@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express();
+const passport = require('passport')
 const userController = require('../controller/userController');
 const middleware = require('../middleware/userAuth');
 const cartController = require('../controller/cartController');
@@ -20,6 +21,14 @@ router.get('/otp',middleware.isLogOut,userController.getOtp);
 router.post('/otp',userController.verifyotp);
 router.get('/logout',userController.logoutUser)
 router.get("/resendOtp",userController.resendOtp)
+// Google login
+router.get('/login/google', middleware.isLogOut, passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google/callback', passport.authenticate('google',{ failureRedirect: '/login' }),
+    (req, res) => {
+        req.session.user = req.user
+        req.session.email = req.user.email
+        res.redirect('/');
+    });
 
 router.get('/detailedProduct',middleware.isBlocked,userController.detailedProduct)
 router.get('/userProfile',middleware.isLogin,userController.userProfile);

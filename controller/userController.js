@@ -300,6 +300,7 @@ const detailedProduct = async (req, res) => {
 const logoutUser = async (req, res) => {
       try {
             if (req.session.email) {
+                  // delete req.session.user
                   delete req.session.email
                   res.redirect('/login')
             } else {

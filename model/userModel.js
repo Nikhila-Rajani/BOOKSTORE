@@ -7,7 +7,6 @@ const userSchema = mongoose.Schema({
       },
       username:{
             type:String,
-            required:true,
       },
       email:{
             type:String,
@@ -15,11 +14,9 @@ const userSchema = mongoose.Schema({
       },
       mobile:{
             type:Number,
-            required:true,
       },
       password:{
             type:String,
-            required:true,
       },
       referalcode:{
             type:String
